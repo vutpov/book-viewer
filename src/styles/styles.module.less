@@ -4,6 +4,9 @@
     width: 100vw;
     height: 100vh;
     color: white;
+    position: absolute;
+    z-index: 2;
+    top:0;
 }
 
 .dimContainer{
@@ -31,4 +34,18 @@
 .pageNavigator{
     opacity: 0;
     transition: opacity 0.2s ease;
+}
+
+.pageViewerControlContainer{
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pageNumber{
+    margin-top: 8px;
 }
