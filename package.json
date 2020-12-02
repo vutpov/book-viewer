@@ -1,6 +1,6 @@
 {
   "name": "book-viewer",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Made with create-react-library",
   "author": "vuthpov",
   "license": "MIT",
@@ -63,6 +63,7 @@
   "dependencies": {
     "less": "^3.12.2",
     "rc-slider": "^9.6.5",
-    "react-icons": "^4.1.0"
+    "react-icons": "^4.1.0",
+    "react-spring": "^8.0.27"
   }
 }
