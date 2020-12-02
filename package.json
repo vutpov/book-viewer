@@ -63,6 +63,7 @@
   "dependencies": {
     "less": "^3.12.2",
     "rc-slider": "^9.6.5",
-    "react-icons": "^4.1.0"
+    "react-icons": "^4.1.0",
+    "react-spring": "^8.0.27"
   }
 }
