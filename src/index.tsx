@@ -1,6 +1,9 @@
 import React, { useState, useCallback } from 'react'
 import PageNavigator from './components/PageNavigator'
 import styles from './styles/styles.module.less'
+import Slider from 'rc-slider'
+import 'rc-slider/assets/index.css'
+import PageNumber from './components/PageNumber'
 
 interface props {
   src: string[]
@@ -14,18 +17,21 @@ export const BookViewer: React.FC<props> = (props) => {
     (indexToChange: number) => {
       const newIndex = currIndex + indexToChange
 
+      let newCurrIndex: number
       if (newIndex < 0) {
-        console.log('on first page')
+        newCurrIndex = 0
       } else if (newIndex >= src.length) {
-        console.log('on last page')
+        newCurrIndex = src.length - 1
       } else {
-        setCurrIndex(newIndex)
+        newCurrIndex = newIndex
       }
+
+      setCurrIndex(newCurrIndex)
     },
     [currIndex, src]
   )
 
-  const pageSrc = currIndex < src.length - 1 ? src[currIndex] : ''
+  const pageSrc = currIndex <= src.length - 1 ? src[currIndex] : ''
 
   return (
     <div className={styles.container}>
@@ -41,6 +47,31 @@ export const BookViewer: React.FC<props> = (props) => {
               changeIndex(-1)
             }}
             className={styles.pageNavigator}
+          />
+        </div>
+        <div />
+        <div className={styles.pageViewerControlContainer}>
+          <Slider
+            min={0}
+            value={currIndex}
+            max={src.length - 1}
+            onChange={(value) => {
+              setCurrIndex(value)
+            }}
+          />
+
+          <PageNumber
+            onChange={(value) => {
+              let indexToChange = Number(value)
+
+              if (!isNaN(indexToChange)) {
+                indexToChange = indexToChange - 1 - currIndex
+                changeIndex(indexToChange)
+              }
+            }}
+            value={currIndex}
+            max={src.length}
+            className={styles.pageNumber}
           />
         </div>
       </div>

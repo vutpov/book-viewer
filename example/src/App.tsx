@@ -10,14 +10,20 @@ const App = () => {
     const getImgs = async () => {
       let res: any = await fetch('https://picsum.photos/v2/list')
       res = await res.json()
+      const imgUrls = res.map((item: any) => item.download_url)
 
-      setImgs(res.map((item: any) => item.download_url))
+      setImgs(imgUrls)
     }
 
     getImgs()
   }, [])
 
-  return <BookViewer src={imgs} />
+  return (
+    <div style={{ position: 'relative' }}>
+      hello
+      <BookViewer src={imgs} />
+    </div>
+  )
 }
 
 export default App
