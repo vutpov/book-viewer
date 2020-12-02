@@ -15,9 +15,9 @@ export const BookViewer: React.FC<props> = (props) => {
       const newIndex = currIndex + indexToChange
 
       if (newIndex < 0) {
-        console.log('first page')
+        console.log('on first page')
       } else if (newIndex >= src.length) {
-        console.log('last page')
+        console.log('on last page')
       } else {
         setCurrIndex(newIndex)
       }
