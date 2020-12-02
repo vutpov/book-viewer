@@ -1,0 +1,34 @@
+@import "variables.less";
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    color: white;
+}
+
+.dimContainer{
+    background: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: grid;
+    grid-template-rows: 85vh 5vh 10vh;
+}
+
+.pageViewerContainer{
+    position: relative;
+
+    &:hover .pageNavigator{
+        opacity: 1;
+    }
+}
+
+.pageViewer{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.pageNavigator{
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
