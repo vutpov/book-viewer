@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useReducer } from 'react'
 import PageNavigator from './components/PageNavigator'
 import styles from './styles/styles.module.less'
 import Slider from 'rc-slider'
@@ -6,14 +6,65 @@ import 'rc-slider/assets/index.css'
 import PageNumber from './components/PageNumber'
 //@ts-ignore
 import { useTransition, animated } from 'react-spring'
+import ViewTypeToggler from './components/ViewTypeToggler'
 
 interface props {
   src: string[]
 }
 
+enum ViewType {
+  'onePage' = 'onePage',
+  'twoPage' = 'twoPage'
+}
+
+interface BookViewerState {
+  currIndex: number
+  step: number
+  viewType: ViewType
+}
+
+enum ActionType {
+  'changePage' = 'changePage',
+  'changeViewType' = 'changeViewType'
+}
+
+const viewTypeObj = {
+  onePage: 1,
+  twoPage: 2
+}
+
+const reducer = (
+  state: BookViewerState,
+  action: {
+    type: ActionType
+    payload: any
+  }
+) => {
+  switch (action.type) {
+    case ActionType.changePage:
+      return {
+        ...state,
+        currIndex: action.payload
+      }
+    case ActionType.changeViewType:
+      return {
+        ...state,
+        viewType: action.payload,
+        step: viewTypeObj[action.payload]
+      }
+    default:
+      return state
+  }
+}
+
+const defaultState: BookViewerState = {
+  currIndex: 0,
+  step: 1,
+  viewType: ViewType.onePage
+}
+
 export const BookViewer: React.FC<props> = (props) => {
   const { src } = props
-  const [currIndex, setCurrIndex] = useState(0)
 
   const [pageImageVisible, setPageImageVisible] = useState(true)
   const transitions = useTransition(pageImageVisible, null, {
@@ -22,11 +73,13 @@ export const BookViewer: React.FC<props> = (props) => {
     leave: { opacity: 0 }
   })
 
-  const [pageNumberValue, setPageNumberValue] = useState(currIndex)
+  const [state, dispatch] = useReducer(reducer, defaultState)
+
+  const [pageNumberValue, setPageNumberValue] = useState(state.currIndex)
 
   const changeIndex = useCallback(
     (indexToChange: number) => {
-      const newIndex = currIndex + indexToChange
+      const newIndex = state.currIndex + indexToChange
       setPageImageVisible(false)
       let newCurrIndex: number
       if (newIndex < 0) {
@@ -39,13 +92,38 @@ export const BookViewer: React.FC<props> = (props) => {
       setPageNumberValue(newCurrIndex)
       setTimeout(() => {
         setPageImageVisible(true)
-        setCurrIndex(newCurrIndex)
+        dispatch({
+          type: ActionType.changePage,
+          payload: newCurrIndex
+        })
       }, 800)
     },
-    [currIndex, src]
+    [state.currIndex, src]
   )
 
-  const pageSrc = currIndex <= src.length - 1 ? src[currIndex] : ''
+  const getPageViewerClasses = () => {
+    return styles[state.viewType]
+  }
+
+  const renderImage = () => {
+    let result: any
+    let firstSrc = state.currIndex <= src.length - 1 ? src[state.currIndex] : ''
+
+    if (state.viewType === 'twoPage') {
+      let secondSrc =
+        state.currIndex + 1 <= src.length - 1 ? src[state.currIndex + 1] : null
+      result = (
+        <React.Fragment>
+          <img src={firstSrc} />
+          {secondSrc && <img src={secondSrc} />}
+        </React.Fragment>
+      )
+    } else {
+      result = <img src={firstSrc} />
+    }
+
+    return result
+  }
 
   return (
     <div className={styles.container}>
@@ -54,22 +132,22 @@ export const BookViewer: React.FC<props> = (props) => {
           {transitions.map(
             ({ item, key, props }: any) =>
               item && (
-                <animated.img
-                  className={styles.pageViewer}
+                <animated.div
+                  className={getPageViewerClasses()}
                   key={key}
                   style={props}
-                  src={pageSrc}
-                />
+                >
+                  {renderImage()}
+                </animated.div>
               )
           )}
-          <img />
 
           <PageNavigator
             onNextClick={() => {
-              changeIndex(1)
+              changeIndex(state.step)
             }}
             onPrevClick={() => {
-              changeIndex(-1)
+              changeIndex(state.step * -1)
             }}
             className={styles.pageNavigator}
           />
@@ -78,27 +156,54 @@ export const BookViewer: React.FC<props> = (props) => {
         <div className={styles.pageViewerControlContainer}>
           <Slider
             min={0}
+            step={state.step}
             value={pageNumberValue}
             max={src.length - 1}
             onChange={(value) => {
               setPageNumberValue(value)
-              setCurrIndex(value)
+              dispatch({
+                type: ActionType.changePage,
+                payload: value
+              })
             }}
           />
 
-          <PageNumber
-            onChange={(value) => {
-              let indexToChange = Number(value)
+          <div className={styles.pageViewerControlSubContainer}>
+            <PageNumber
+              onChange={(value) => {
+                let indexToChange = Number(value)
 
-              if (!isNaN(indexToChange)) {
-                indexToChange = indexToChange - 1 - currIndex
-                changeIndex(indexToChange)
-              }
-            }}
-            value={pageNumberValue}
-            max={src.length}
-            className={styles.pageNumber}
-          />
+                if (!isNaN(indexToChange)) {
+                  indexToChange = indexToChange - 1 - state.currIndex
+                  changeIndex(indexToChange)
+                }
+              }}
+              step={state.step}
+              value={pageNumberValue}
+              max={src.length}
+              className={styles.pageNumber}
+            />
+            <div style={{ width: 8 }} />
+
+            <ViewTypeToggler<ViewType>
+              onClick={(value) => {
+                dispatch({
+                  type: ActionType.changeViewType,
+                  payload: value
+                })
+              }}
+              options={[
+                {
+                  label: 'One Page',
+                  value: ViewType.onePage
+                },
+                {
+                  label: 'Two Page',
+                  value: ViewType.twoPage
+                }
+              ]}
+            />
+          </div>
         </div>
       </div>
     </div>
