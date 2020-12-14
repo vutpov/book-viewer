@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useReducer } from 'react'
+import React, { useState, useCallback, useReducer, useEffect } from 'react'
 import PageNavigator from './components/PageNavigator'
 import styles from './styles/styles.module.less'
 import Slider from 'rc-slider'
@@ -7,9 +7,11 @@ import PageNumber from './components/PageNumber'
 //@ts-ignore
 import { useTransition, animated } from 'react-spring'
 import ViewTypeToggler from './components/ViewTypeToggler'
+import { usePrevious } from 'ahooks'
 
 interface props {
   src: string[]
+  onChange?: (args: { oldIndex: number; newIndex: number }) => void
 }
 
 enum ViewType {
@@ -64,7 +66,7 @@ const defaultState: BookViewerState = {
 }
 
 export const BookViewer: React.FC<props> = (props) => {
-  const { src } = props
+  const { src, onChange } = props
 
   const [pageImageVisible, setPageImageVisible] = useState(true)
   const transitions = useTransition(pageImageVisible, null, {
@@ -90,6 +92,7 @@ export const BookViewer: React.FC<props> = (props) => {
         newCurrIndex = newIndex
       }
       setPageNumberValue(newCurrIndex)
+
       setTimeout(() => {
         setPageImageVisible(true)
         dispatch({
@@ -100,6 +103,16 @@ export const BookViewer: React.FC<props> = (props) => {
     },
     [state.currIndex, src]
   )
+
+  const oldIndex = usePrevious(state.currIndex)
+
+  useEffect(() => {
+    onChange &&
+      onChange({
+        oldIndex: oldIndex,
+        newIndex: state.currIndex
+      })
+  }, [state.currIndex, oldIndex, onChange])
 
   const getPageViewerClasses = () => {
     return styles[state.viewType]

@@ -20,8 +20,12 @@ const App = () => {
 
   return (
     <div style={{ position: 'relative' }}>
-      hello
-      <BookViewer src={imgs} />
+      <BookViewer
+        src={imgs}
+        onChange={(args) => {
+          console.log(args)
+        }}
+      />
     </div>
   )
 }
