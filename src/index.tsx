@@ -2,7 +2,7 @@ import React, { useState, useCallback, useReducer, useEffect } from 'react'
 import PageNavigator from './components/PageNavigator'
 import styles from './styles/styles.module.less'
 import Slider from 'rc-slider'
-import 'rc-slider/assets/index.css'
+// import 'rc-slider/assets/index.css'
 import PageNumber from './components/PageNumber'
 //@ts-ignore
 import { useTransition, animated } from 'react-spring'
@@ -12,6 +12,10 @@ import { usePrevious } from 'ahooks'
 interface props {
   src: string[]
   onChange?: (args: { oldIndex: number; newIndex: number }) => void
+  containerClassName?: string
+  containerRef?: React.RefObject<HTMLDivElement> | null
+  pageIndex?: number
+  containerStyle?: React.CSSProperties
 }
 
 enum ViewType {
@@ -66,13 +70,31 @@ const defaultState: BookViewerState = {
 }
 
 export const BookViewer: React.FC<props> = (props) => {
-  const { src, onChange } = props
+  const {
+    src,
+    onChange,
+    containerClassName: pContainerClassName,
+    containerRef,
+    pageIndex,
+    containerStyle
+  } = props
 
   const [pageImageVisible, setPageImageVisible] = useState(true)
   const transitions = useTransition(pageImageVisible, null, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }
+  })
+
+  useEffect(() => {
+    if (pageIndex !== undefined) {
+      const value = pageIndex - 1
+      setPageNumberValue(value)
+      dispatch({
+        type: ActionType.changePage,
+        payload: value
+      })
+    }
   })
 
   const [state, dispatch] = useReducer(reducer, defaultState)
@@ -138,8 +160,16 @@ export const BookViewer: React.FC<props> = (props) => {
     return result
   }
 
+  const containerClassName = pContainerClassName
+    ? `${styles.container} ${pContainerClassName}`
+    : styles.container
+
   return (
-    <div className={styles.container}>
+    <div
+      className={containerClassName}
+      ref={containerRef}
+      style={containerStyle}
+    >
       <div className={styles.dimContainer}>
         <div className={styles.pageViewerContainer}>
           {transitions.map(
