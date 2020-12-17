@@ -6,21 +6,22 @@
 
 ## Install
 
-```bash
+``` bash
 npm install --save book-viewer
 ```
 
 ## Usage
 
-```tsx
+``` tsx
 import React, { Component } from 'react'
 
-import MyComponent from 'book-viewer'
-import 'book-viewer/dist/index.css'
+import {BookViewer} from 'book-viewer'
+import 'rc-slider/assets/index.css';
+import 'book-viewer/dist/index.css';
 
 class Example extends Component {
   render() {
-    return <MyComponent />
+    return <BookViewer src={[]} />
   }
 }
 ```
