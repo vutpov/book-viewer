@@ -142,11 +142,17 @@ export const BookViewer: React.FC<props> = (props) => {
 
   const renderImage = () => {
     let result: any
-    let firstSrc = state.currIndex <= src.length - 1 ? src[state.currIndex] : ''
+    let beginIndex = state.currIndex
+    if (state.viewType === 'twoPage' && beginIndex % 2 !== 0) {
+      beginIndex = beginIndex - 1
+    }
+
+    let firstSrc = beginIndex <= src.length - 1 ? src[beginIndex] : ''
 
     if (state.viewType === 'twoPage') {
       let secondSrc =
-        state.currIndex + 1 <= src.length - 1 ? src[state.currIndex + 1] : null
+        beginIndex + 1 <= src.length - 1 ? src[beginIndex + 1] : null
+
       result = (
         <React.Fragment>
           <img src={firstSrc} />
@@ -199,7 +205,6 @@ export const BookViewer: React.FC<props> = (props) => {
         <div className={styles.pageViewerControlContainer}>
           <Slider
             min={0}
-            step={state.step}
             value={pageNumberValue}
             max={src.length - 1}
             onChange={(value) => {

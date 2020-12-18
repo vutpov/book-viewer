@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import 'rc-slider/assets/index.css'
 import { BookViewer } from 'book-viewer'
 import 'book-viewer/dist/index.css'
 
