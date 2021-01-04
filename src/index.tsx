@@ -95,7 +95,7 @@ export const BookViewer: React.FC<props> = (props) => {
         payload: value
       })
     }
-  })
+  }, [pageIndex])
 
   const [state, dispatch] = useReducer(reducer, defaultState)
 
