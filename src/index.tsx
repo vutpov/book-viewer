@@ -16,6 +16,11 @@ interface props {
   containerRef?: React.RefObject<HTMLDivElement> | null
   pageIndex?: number
   containerStyle?: React.CSSProperties
+  transitionTimeout?: number
+  springOptions?: {
+    immediate?: boolean
+    [index: string]: any
+  }
 }
 
 enum ViewType {
@@ -76,11 +81,14 @@ export const BookViewer: React.FC<props> = (props) => {
     containerClassName: pContainerClassName,
     containerRef,
     pageIndex,
-    containerStyle
+    containerStyle,
+    transitionTimeout = 800,
+    springOptions
   } = props
 
   const [pageImageVisible, setPageImageVisible] = useState(true)
   const transitions = useTransition(pageImageVisible, null, {
+    ...springOptions,
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }
@@ -121,7 +129,7 @@ export const BookViewer: React.FC<props> = (props) => {
           type: ActionType.changePage,
           payload: newCurrIndex
         })
-      }, 800)
+      }, transitionTimeout)
     },
     [state.currIndex, src]
   )
