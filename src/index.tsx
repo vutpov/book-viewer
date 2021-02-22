@@ -13,7 +13,7 @@ interface props {
   src: string[]
   onChange?: (args: { oldIndex: number; newIndex: number }) => void
   containerClassName?: string
-  containerRef?: React.RefObject<HTMLDivElement> | null
+  containerRef?: React.RefObject<any> | null
   pageIndex?: number
   containerStyle?: React.CSSProperties
   transitionTimeout?: number
@@ -74,12 +74,17 @@ const defaultState: BookViewerState = {
   viewType: ViewType.onePage
 }
 
+const keyboardObj = {
+  37: -1, //left
+  39: 1 //right
+}
+
 export const BookViewer: React.FC<props> = (props) => {
   const {
     src,
     onChange,
     containerClassName: pContainerClassName,
-    containerRef,
+    containerRef: pContainerRef,
     pageIndex,
     containerStyle,
     transitionTimeout = 800,
@@ -181,10 +186,20 @@ export const BookViewer: React.FC<props> = (props) => {
   return (
     <div
       className={containerClassName}
-      ref={containerRef}
+      ref={(dom) => {
+        if (pContainerRef) {
+          //@ts-ignore
+          pContainerRef!!.current = dom
+        }
+      }}
       style={containerStyle}
     >
-      <div className={styles.dimContainer}>
+      <div
+        className={styles.dimContainer}
+        onKeyDown={(e) => {
+          changeIndex(keyboardObj[e.keyCode] * state.step)
+        }}
+      >
         <div className={styles.pageViewerContainer}>
           {transitions.map(
             ({ item, key, props }: any) =>
