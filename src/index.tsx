@@ -197,7 +197,10 @@ export const BookViewer: React.FC<props> = (props) => {
       <div
         className={styles.dimContainer}
         onKeyDown={(e) => {
-          changeIndex(keyboardObj[e.keyCode] * state.step)
+          const index = keyboardObj[e.keyCode]
+          if (index) {
+            changeIndex(keyboardObj[e.keyCode] * state.step)
+          }
         }}
       >
         <div className={styles.pageViewerContainer}>
@@ -242,7 +245,13 @@ export const BookViewer: React.FC<props> = (props) => {
           <div className={styles.pageViewerControlSubContainer}>
             <PageNumber
               onChange={(value) => {
-                let indexToChange = Number(value)
+                let indexToChange
+                try {
+                  indexToChange = Number(value)
+                } catch (e) {
+                  indexToChange = state.currIndex
+                  console.error(e, 'hello')
+                }
 
                 if (!isNaN(indexToChange)) {
                   indexToChange = indexToChange - 1 - state.currIndex
