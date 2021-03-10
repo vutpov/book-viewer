@@ -7,4 +7,4 @@ steps:
   - npm install
   - npm publish
   environment:
-   NODE_AUTH_TOKEN="$$NPM_TOKEN"
+  - NODE_AUTH_TOKEN="$$NPM_TOKEN"
