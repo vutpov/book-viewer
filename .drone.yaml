@@ -7,4 +7,5 @@ steps:
   - npm install
   - npm publish
   settings:
-  - token: ${NPM_TOKEN}
+    token: ${NPM_TOKEN}
+    registry: 'https://registry.npmjs.org'
