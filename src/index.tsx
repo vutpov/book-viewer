@@ -13,9 +13,14 @@ interface props {
   src: string[]
   onChange?: (args: { oldIndex: number; newIndex: number }) => void
   containerClassName?: string
-  containerRef?: React.RefObject<HTMLDivElement> | null
+  containerRef?: React.RefObject<any> | null
   pageIndex?: number
   containerStyle?: React.CSSProperties
+  transitionTimeout?: number
+  springOptions?: {
+    immediate?: boolean
+    [index: string]: any
+  }
 }
 
 enum ViewType {
@@ -69,18 +74,26 @@ const defaultState: BookViewerState = {
   viewType: ViewType.onePage
 }
 
+const keyboardObj = {
+  37: -1, //left
+  39: 1 //right
+}
+
 export const BookViewer: React.FC<props> = (props) => {
   const {
     src,
     onChange,
     containerClassName: pContainerClassName,
-    containerRef,
+    containerRef: pContainerRef,
     pageIndex,
-    containerStyle
+    containerStyle,
+    transitionTimeout = 800,
+    springOptions
   } = props
 
   const [pageImageVisible, setPageImageVisible] = useState(true)
   const transitions = useTransition(pageImageVisible, null, {
+    ...springOptions,
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }
@@ -95,7 +108,7 @@ export const BookViewer: React.FC<props> = (props) => {
         payload: value
       })
     }
-  })
+  }, [pageIndex])
 
   const [state, dispatch] = useReducer(reducer, defaultState)
 
@@ -121,7 +134,7 @@ export const BookViewer: React.FC<props> = (props) => {
           type: ActionType.changePage,
           payload: newCurrIndex
         })
-      }, 800)
+      }, transitionTimeout)
     },
     [state.currIndex, src]
   )
@@ -142,11 +155,17 @@ export const BookViewer: React.FC<props> = (props) => {
 
   const renderImage = () => {
     let result: any
-    let firstSrc = state.currIndex <= src.length - 1 ? src[state.currIndex] : ''
+    let beginIndex = state.currIndex
+    if (state.viewType === 'twoPage' && beginIndex % 2 !== 0) {
+      beginIndex = beginIndex - 1
+    }
+
+    let firstSrc = beginIndex <= src.length - 1 ? src[beginIndex] : ''
 
     if (state.viewType === 'twoPage') {
       let secondSrc =
-        state.currIndex + 1 <= src.length - 1 ? src[state.currIndex + 1] : null
+        beginIndex + 1 <= src.length - 1 ? src[beginIndex + 1] : null
+
       result = (
         <React.Fragment>
           <img src={firstSrc} />
@@ -167,10 +186,23 @@ export const BookViewer: React.FC<props> = (props) => {
   return (
     <div
       className={containerClassName}
-      ref={containerRef}
+      ref={(dom) => {
+        if (pContainerRef) {
+          //@ts-ignore
+          pContainerRef!!.current = dom
+        }
+      }}
       style={containerStyle}
     >
-      <div className={styles.dimContainer}>
+      <div
+        className={styles.dimContainer}
+        onKeyDown={(e) => {
+          const index = keyboardObj[e.keyCode]
+          if (index) {
+            changeIndex(keyboardObj[e.keyCode] * state.step)
+          }
+        }}
+      >
         <div className={styles.pageViewerContainer}>
           {transitions.map(
             ({ item, key, props }: any) =>
@@ -199,7 +231,6 @@ export const BookViewer: React.FC<props> = (props) => {
         <div className={styles.pageViewerControlContainer}>
           <Slider
             min={0}
-            step={state.step}
             value={pageNumberValue}
             max={src.length - 1}
             onChange={(value) => {
@@ -214,7 +245,13 @@ export const BookViewer: React.FC<props> = (props) => {
           <div className={styles.pageViewerControlSubContainer}>
             <PageNumber
               onChange={(value) => {
-                let indexToChange = Number(value)
+                let indexToChange
+                try {
+                  indexToChange = Number(value)
+                } catch (e) {
+                  indexToChange = state.currIndex
+                  console.error(e, 'hello')
+                }
 
                 if (!isNaN(indexToChange)) {
                   indexToChange = indexToChange - 1 - state.currIndex
