@@ -4,12 +4,12 @@ steps:
 - name: build and release
   image: node:10
   commands:
-  - echo $TOKEN
   - npm install
   - npm publish
   settings:
-    token: $TOKEN
+    username: vutpov
+    password: $NPM_PASSWORD
     registry: 'https://registry.npmjs.org'
   environment:
     TOKEN:
-      from_secret: NPM_TOKEN
+      from_secret: NPM_PASSWORD
