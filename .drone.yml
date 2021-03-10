@@ -9,7 +9,6 @@ steps:
   settings:
     username: vutpov
     password: $TOKEN
-    registry: 'https://registry.npmjs.org'
   environment:
     TOKEN:
       from_secret: NPM_PASSWORD
