@@ -5,7 +5,6 @@ steps:
   image: node:10
   commands:
   - echo $TOKEN
-  - echo ${TOKEN}
   - npm install
   - npm publish
   settings:
