@@ -16,7 +16,6 @@ const PageNavigator: React.FC<PageNavigatorProps> = (props) => {
 
   useEffect(() => {
     const dom = document.getElementById(btnNextId)
-    console.log(dom, 'hello')
     dom!!.focus()
   }, [])
 
