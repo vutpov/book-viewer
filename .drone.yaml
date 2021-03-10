@@ -4,7 +4,7 @@ steps:
 - name: build and release
   image: node:10
   commands:
-  - echo ${NPM_TOKEN}
+  - echo ${{NPM_TOKEN}}
   - npm install
   - npm publish
   
