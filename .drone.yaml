@@ -4,10 +4,12 @@ steps:
 - name: build and release
   image: node:10
   commands:
-  - echo ${{NPM_TOKEN}}
+  - echo ${TOKEN}
   - npm install
   - npm publish
-  
   settings:
-    token: ${NPM_TOKEN}
+    token: ${TOKEN}
     registry: 'https://registry.npmjs.org'
+  environment:
+    TOKEN:
+      from_secret: NPM_TOKEN
