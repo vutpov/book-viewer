@@ -8,7 +8,7 @@ steps:
   - npm publish
   settings:
     username: vutpov
-    password: $NPM_PASSWORD
+    password: $TOKEN
     registry: 'https://registry.npmjs.org'
   environment:
     TOKEN:
