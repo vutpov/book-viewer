@@ -6,3 +6,5 @@ steps:
   commands:
   - npm install
   - npm publish
+  environment:
+  - NODE_AUTH_TOKEN=${NPM_TOKEN}
