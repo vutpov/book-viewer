@@ -2,13 +2,10 @@ kind: pipeline
 name: Build Packages and Release
 steps:
 - name: build and release
-  image: node:10
-  commands:
-  - npm install
-  - npm publish
+  image: plugins/npm
   settings:
     username: vutpov
-    password: $TOKEN
-  environment:
-    TOKEN:
+    email: vuthpov26@gmail.com
+    password:
       from_secret: NPM_PASSWORD
+      
