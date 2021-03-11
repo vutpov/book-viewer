@@ -8,4 +8,3 @@ steps:
     email: vuthpov26@gmail.com
     password:
       from_secret: NPM_PASSWORD
-      
