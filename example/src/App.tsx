@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import 'rc-slider/assets/index.css'
 import { BookViewer } from 'book-viewer'
 import 'book-viewer/dist/index.css'
+import { useFullscreen } from 'ahooks'
 
 const App = () => {
   const [imgs, setImgs] = useState<string[]>([])
@@ -18,15 +19,37 @@ const App = () => {
     getImgs()
   }, [])
 
+  const ref = useRef<any>()
+  const [isFullscreen, { setFull }] = useFullscreen(ref)
+
+  useEffect(() => {
+    if (isFullscreen) {
+      const el = document.getElementById('__book-viewer-btn-next')!!
+      console.log(el)
+      el.focus()
+    }
+  }, [isFullscreen])
+
   return (
-    <div style={{ position: 'relative' }}>
+    <>
+      <button
+        onClick={() => {
+          setFull()
+        }}
+      >
+        open
+      </button>
+
       <BookViewer
+        containerStyle={{ display: isFullscreen ? 'block' : 'none' }}
+        containerRef={ref}
+        id={'view'}
         src={imgs}
         onChange={(args) => {
           console.log(args)
         }}
       />
-    </div>
+    </>
   )
 }
 

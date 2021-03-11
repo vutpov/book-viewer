@@ -61,7 +61,7 @@
     "dist"
   ],
   "dependencies": {
-    "ahooks": "^2.9.2",
+    "ahooks": "^2.9.6",
     "less": "^3.12.2",
     "rc-slider": "^9.6.5",
     "react-icons": "^4.1.0",

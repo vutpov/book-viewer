@@ -19,6 +19,7 @@ interface props {
     immediate?: boolean
     [index: string]: any
   }
+  [index: string]: any
 }
 
 enum ViewType {
@@ -86,7 +87,8 @@ export const BookViewer: React.FC<props> = (props) => {
     pageIndex,
     containerStyle,
     transitionTimeout = 800,
-    springOptions
+    springOptions,
+    ...rest
   } = props
 
   const [pageImageVisible, setPageImageVisible] = useState(true)
@@ -183,6 +185,7 @@ export const BookViewer: React.FC<props> = (props) => {
 
   return (
     <div
+      {...rest}
       className={containerClassName}
       ref={(dom) => {
         if (pContainerRef) {
@@ -248,7 +251,7 @@ export const BookViewer: React.FC<props> = (props) => {
                   indexToChange = Number(value)
                 } catch (e) {
                   indexToChange = state.currIndex
-                  console.error(e, 'hello')
+                  console.error(e)
                 }
 
                 if (!isNaN(indexToChange)) {

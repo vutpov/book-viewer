@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@ahooksjs/use-request@^2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@ahooksjs/use-request/-/use-request-2.8.1.tgz#bf06a63368df1859b6b79a946612eb0d2889ab6f"
-  integrity sha512-+C+5jyRUf45ao8yM333vaYxaNrZOgcboy56aqiBthV0tN18FwxHEhRw9Ddoku/6EU658z7erhPGLksAabIU2bQ==
+"@ahooksjs/use-request@^2.8.3":
+  version "2.8.3"
+  resolved "https://registry.yarnpkg.com/@ahooksjs/use-request/-/use-request-2.8.3.tgz#9b7eff972658497473f61ceb89a268d665e28aeb"
+  integrity sha512-Cd/i+cCdf8fl1kiOMU8BICttQGBnFZPkp5+R6EBoG6WgPkWGHMv6LhPPXwVEgYyHJ3pBYGYcHL1bhgY4rjiBuA==
   dependencies:
     lodash.debounce "^4.0.8"
     lodash.throttle "^4.1.1"
@@ -1661,12 +1661,22 @@
     csstype "^3.0.2"
 
 "@types/react@^16":
-  version "0.0.0"
-  uid ""
+  version "16.14.5"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.14.5.tgz#2c39b5cadefaf4829818f9219e5e093325979f4d"
+  integrity sha512-YRRv9DNZhaVTVRh9Wmmit7Y0UFhEVqXqCSw3uazRWMxa2x85hWQZ5BN24i7GXZbaclaLXEcodEeIHsjBA8eAMw==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
 
 "@types/react@link:../node_modules/@types/react":
   version "0.0.0"
   uid ""
+
+"@types/scheduler@*":
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.1.tgz#18845205e86ff0038517aab7a18a62a6b9f71275"
+  integrity sha512-EaCxbanVeyxDRTQBkdLb3Bvl/HK7PBK6UJjsSixB0iHKoWxE5uu2Q/DgtpOhPIojN0Zl1whvOd7PoHs2P0s5eA==
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
@@ -1981,12 +1991,12 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-ahooks@^2.9.2:
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/ahooks/-/ahooks-2.9.2.tgz#b8d9dc0f4d6e8ed64f425714f5e000fa4e9b14bc"
-  integrity sha512-rylm2FTl3ud9lxi95EZU249fBECLXPC85KRbJiqx3MUR/FoCgf2QQjDfUEJjZQ3VVJmvb6fGL71Sqgk6hca1HA==
+ahooks@^2.9.6:
+  version "2.9.6"
+  resolved "https://registry.yarnpkg.com/ahooks/-/ahooks-2.9.6.tgz#afde34cc7af722da1c724fddf75c9191672ac2f5"
+  integrity sha512-HpAN50c9HpO8bSf/9xsJFAtQZfCrnU2YFJM4WBfJ8rHSucpjzG0WkqfwwuoROlAVAkqbGR98flPoimWrPYvsQQ==
   dependencies:
-    "@ahooksjs/use-request" "^2.8.1"
+    "@ahooksjs/use-request" "^2.8.3"
     "@types/js-cookie" "^2.2.6"
     dayjs "^1.9.1"
     intersection-observer "^0.7.0"
