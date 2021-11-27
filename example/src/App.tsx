@@ -25,7 +25,6 @@ const App = () => {
   useEffect(() => {
     if (isFullscreen) {
       const el = document.getElementById('__book-viewer-btn-next')!!
-      console.log(el)
       el.focus()
     }
   }, [isFullscreen])
@@ -48,6 +47,7 @@ const App = () => {
         onChange={(args) => {
           console.log(args)
         }}
+        suffixControl={<div>hello</div>}
       />
     </>
   )

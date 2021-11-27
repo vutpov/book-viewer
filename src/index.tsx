@@ -15,6 +15,7 @@ interface props {
   pageIndex?: number
   containerStyle?: React.CSSProperties
   transitionTimeout?: number
+  suffixControl?: React.ReactNode
   springOptions?: {
     immediate?: boolean
     [index: string]: any
@@ -88,6 +89,7 @@ export const BookViewer: React.FC<props> = (props) => {
     containerStyle,
     transitionTimeout = 800,
     springOptions,
+    suffixControl,
     ...rest
   } = props
 
@@ -264,7 +266,6 @@ export const BookViewer: React.FC<props> = (props) => {
               max={src.length}
               className={styles.pageNumber}
             />
-            <div style={{ width: 8 }} />
 
             <ViewTypeToggler<ViewType>
               onClick={(value) => {
@@ -284,6 +285,8 @@ export const BookViewer: React.FC<props> = (props) => {
                 }
               ]}
             />
+
+            {suffixControl}
           </div>
         </div>
       </div>
