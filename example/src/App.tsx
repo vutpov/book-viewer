@@ -47,7 +47,28 @@ const App = () => {
         onChange={(args) => {
           console.log(args)
         }}
-        suffixControl={<div>hello</div>}
+        prefixControl={
+          <div
+            style={{
+              width: '100%'
+            }}
+          >
+            prefix
+          </div>
+        }
+        suffixControl={
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}
+          >
+            <div>1</div>
+            <div>hello</div>
+          </div>
+        }
       />
     </>
   )
