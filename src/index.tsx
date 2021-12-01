@@ -16,6 +16,7 @@ interface props {
   containerStyle?: React.CSSProperties
   transitionTimeout?: number
   suffixControl?: React.ReactNode
+  prefixControl?: React.ReactNode
   springOptions?: {
     immediate?: boolean
     [index: string]: any
@@ -90,6 +91,7 @@ export const BookViewer: React.FC<props> = (props) => {
     transitionTimeout = 800,
     springOptions,
     suffixControl,
+    prefixControl,
     ...rest
   } = props
 
@@ -246,6 +248,7 @@ export const BookViewer: React.FC<props> = (props) => {
           />
 
           <div className={styles.pageViewerControlSubContainer}>
+            {prefixControl}
             <PageNumber
               onChange={(value) => {
                 let indexToChange
@@ -285,7 +288,6 @@ export const BookViewer: React.FC<props> = (props) => {
                 }
               ]}
             />
-
             {suffixControl}
           </div>
         </div>
