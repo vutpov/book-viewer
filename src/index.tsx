@@ -223,7 +223,7 @@ export const BookViewer: React.FC<props> = (props) => {
           }
         }}
       >
-        <div className={styles.pageViewerContainer}>
+        <div className={`page-viewer-container ${styles.pageViewerContainer}`}>
           {transitions.map(
             ({ item, key, props }: any) =>
               item && (
