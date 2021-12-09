@@ -248,7 +248,9 @@ export const BookViewer: React.FC<props> = (props) => {
           />
         </div>
         <div />
-        <div className={styles.pageViewerControlContainer}>
+        <div
+          className={`page-control-container ${styles.pageViewerControlContainer}`}
+        >
           <Slider
             min={0}
             value={pageNumberValue}
