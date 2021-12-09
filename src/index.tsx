@@ -172,12 +172,16 @@ export const BookViewer: React.FC<props> = (props) => {
 
       result = (
         <React.Fragment>
-          <img src={firstSrc} />
+          {firstSrc && <img src={firstSrc} />}
           {secondSrc && <img src={secondSrc} />}
         </React.Fragment>
       )
     } else {
-      result = <img src={firstSrc} />
+      result = <> {firstSrc && <img src={firstSrc} />}</>
+    }
+
+    if (!firstSrc) {
+      console.error(`Invalid image src: ${firstSrc}`)
     }
 
     return result
