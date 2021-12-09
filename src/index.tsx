@@ -17,6 +17,7 @@ interface props {
   transitionTimeout?: number
   suffixControl?: React.ReactNode
   prefixControl?: React.ReactNode
+  placeholder?: React.ReactNode
   springOptions?: {
     immediate?: boolean
     [index: string]: any
@@ -92,6 +93,7 @@ export const BookViewer: React.FC<props> = (props) => {
     springOptions,
     suffixControl,
     prefixControl,
+    placeholder,
     ...rest
   } = props
 
@@ -172,8 +174,8 @@ export const BookViewer: React.FC<props> = (props) => {
 
       result = (
         <React.Fragment>
-          {firstSrc && <img src={firstSrc} />}
-          {secondSrc && <img src={secondSrc} />}
+          {firstSrc ? <img src={firstSrc} /> : placeholder}
+          {secondSrc ? <img src={secondSrc} /> : placeholder}
         </React.Fragment>
       )
 
@@ -182,7 +184,10 @@ export const BookViewer: React.FC<props> = (props) => {
       }
     } else {
       result = (
-        <React.Fragment> {firstSrc && <img src={firstSrc} />}</React.Fragment>
+        <React.Fragment>
+          {' '}
+          {firstSrc ? <img src={firstSrc} /> : placeholder}
+        </React.Fragment>
       )
 
       if (!firstSrc || typeof firstSrc !== 'string') {
