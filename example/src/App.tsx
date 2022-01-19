@@ -69,6 +69,10 @@ const App = () => {
             <div>hello</div>
           </div>
         }
+        springOptions={{
+          immediate: true
+        }}
+        transitionTimeout={0}
       />
     </>
   )
