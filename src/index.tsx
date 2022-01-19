@@ -123,8 +123,11 @@ export const BookViewer: React.FC<props> = (props) => {
 
   const [pageNumberValue, setPageNumberValue] = useState(state.currIndex)
 
+  const [imgVisible, setImgVisible] = useState(true)
+
   const changeIndex = useCallback(
     (indexToChange: number) => {
+      setImgVisible(false)
       const newIndex = state.currIndex + indexToChange
       setPageImageVisible(false)
       let newCurrIndex: number
@@ -178,12 +181,20 @@ export const BookViewer: React.FC<props> = (props) => {
       result = (
         <React.Fragment>
           {firstSrc ? (
-            <Img className={styles.bookImgTwoPage} imageSrc={firstSrc} />
+            <Img
+              className={styles.bookImgTwoPage}
+              visible={imgVisible}
+              imageSrc={firstSrc}
+            />
           ) : (
             placeholder
           )}
           {secondSrc ? (
-            <Img className={styles.bookImgTwoPage} imageSrc={secondSrc} />
+            <Img
+              className={styles.bookImgTwoPage}
+              visible={imgVisible}
+              imageSrc={secondSrc}
+            />
           ) : (
             placeholder
           )}
@@ -197,7 +208,11 @@ export const BookViewer: React.FC<props> = (props) => {
       result = (
         <React.Fragment>
           {firstSrc ? (
-            <Img className={styles.bookImgOnePage} imageSrc={firstSrc} />
+            <Img
+              className={styles.bookImgOnePage}
+              visible={imgVisible}
+              imageSrc={firstSrc}
+            />
           ) : (
             placeholder
           )}
@@ -270,6 +285,7 @@ export const BookViewer: React.FC<props> = (props) => {
             value={pageNumberValue}
             max={src.length - 1}
             onChange={(value) => {
+              setImgVisible(false)
               setPageNumberValue(value)
               dispatch({
                 type: ActionType.changePage,
