@@ -6,6 +6,9 @@ import PageNumber from './components/PageNumber'
 import { useTransition, animated } from 'react-spring'
 import ViewTypeToggler from './components/ViewTypeToggler'
 import { usePrevious } from 'ahooks'
+import Img from './components/Img'
+import { ReactComponent as OnePage } from './assets/svg/one-page.svg'
+import { ReactComponent as TwoPage } from './assets/svg/two-pages.svg'
 
 interface props {
   src: string[]
@@ -174,8 +177,16 @@ export const BookViewer: React.FC<props> = (props) => {
 
       result = (
         <React.Fragment>
-          {firstSrc ? <img src={firstSrc} /> : placeholder}
-          {secondSrc ? <img src={secondSrc} /> : placeholder}
+          {firstSrc ? (
+            <Img className={styles.bookImgTwoPage} imageSrc={firstSrc} />
+          ) : (
+            placeholder
+          )}
+          {secondSrc ? (
+            <Img className={styles.bookImgTwoPage} imageSrc={secondSrc} />
+          ) : (
+            placeholder
+          )}
         </React.Fragment>
       )
 
@@ -185,8 +196,11 @@ export const BookViewer: React.FC<props> = (props) => {
     } else {
       result = (
         <React.Fragment>
-          {' '}
-          {firstSrc ? <img src={firstSrc} /> : placeholder}
+          {firstSrc ? (
+            <Img className={styles.bookImgOnePage} imageSrc={firstSrc} />
+          ) : (
+            placeholder
+          )}
         </React.Fragment>
       )
 
@@ -296,11 +310,11 @@ export const BookViewer: React.FC<props> = (props) => {
               }}
               options={[
                 {
-                  label: 'One Page',
+                  label: <OnePage />,
                   value: ViewType.onePage
                 },
                 {
-                  label: 'Two Page',
+                  label: <TwoPage />,
                   value: ViewType.twoPage
                 }
               ]}

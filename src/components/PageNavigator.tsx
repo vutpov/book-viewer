@@ -20,9 +20,9 @@ const PageNavigator: React.FC<PageNavigatorProps> = (props) => {
   }, [])
 
   return (
-    <div className={`${styles.pageNavigatorContainer} ${className}`}>
+    <React.Fragment>
       <button
-        className={styles.pageNavBtn}
+        className={`${styles.pageNavBtn} ${styles.pageNavPrevBtn} ${className}`}
         onClick={() => {
           onPrevClick()
         }}
@@ -31,14 +31,14 @@ const PageNavigator: React.FC<PageNavigatorProps> = (props) => {
       </button>
       <button
         id={btnNextId}
-        className={styles.pageNavBtn}
+        className={`${styles.pageNavBtn} ${styles.pageNavNextBtn} ${className}`}
         onClick={() => {
           onNextClick()
         }}
       >
         <FaArrowRight className={styles.icon} />
       </button>
-    </div>
+    </React.Fragment>
   )
 }
 
