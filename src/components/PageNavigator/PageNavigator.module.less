@@ -1,15 +1,11 @@
 @import "../../styles/variables.less";
 
-.pageNavigatorContainer{
-    display: flex;
-    position: absolute;
-    top: 50%;
-    justify-content: space-between;
-    width: 95%;
-    left: 2.5%;
-}
+
 
 .pageNavBtn{
+    top: 50%;
+    position: absolute;
+  
     background-color: fade(@dark-color, 80%);
     border: none;
     display: flex;
@@ -22,6 +18,15 @@
     &:hover .icon{
         color: rgba(255, 255, 255, 1);
     }
+}
+
+.pageNavPrevBtn{
+  left: 2.5%;
+}
+
+.pageNavNextBtn{
+  right: 2.5%;
+
 }
 
 .icon{
