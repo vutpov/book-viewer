@@ -14,12 +14,11 @@
     background: rgba(0, 0, 0, 0.9);
     display: grid;
     grid-template-rows: 85vh 5vh 10vh;
+     overflow: hidden;
 }
 
 .pageViewerContainer{
     position: relative;
-    overflow: hidden;
-
 
     &:hover .pageNavigator{
         opacity: 1;
@@ -62,7 +61,7 @@
         transform-style: preserve-3d;
         transform: rotateY(0deg);
         transition: 0.5s;
-        position:absolute;
+        position: absolute;
         top: 0;
         left: 0;
     }
@@ -71,7 +70,7 @@
 
     img{
         object-fit: contain;
-     
+        width: ~"min(100%, 50vh)";
     }
 
     .front{
