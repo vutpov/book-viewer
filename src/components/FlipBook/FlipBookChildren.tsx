@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from 'react'
 import { BookViewerState } from '../reducer'
 import styles from './styles.module.less'
 import lodash from 'lodash'
+import { vitualizeArray } from '../../utils'
 
 interface FlipBookChildrenProps {
   state: BookViewerState
@@ -71,11 +72,18 @@ const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
     })
   }, [chunkedSrc, state.currIndex])
 
+  const vitualizedChunked = vitualizeArray({
+    arr: chunkedSrc,
+    from: visibleChunkIndex,
+    padding: 5
+  })
+
   return (
     <React.Fragment>
-      {chunkedSrc.map((item, index) => {
-        const backSrc = item[1].src
-        const frontSrc = item[0].src
+      {vitualizedChunked.map((item) => {
+        const backSrc = item.value[1].src
+        const frontSrc = item.value[0].src
+        const index = item.index
 
         let zIndex: number
         let flipStyle: React.CSSProperties = {}
