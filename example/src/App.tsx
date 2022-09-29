@@ -10,9 +10,11 @@ const App = () => {
 
   useEffect(() => {
     const getImgs = async () => {
-      let res: any = await fetch('https://picsum.photos/v2/list')
-      res = await res.json()
-      const imgUrls = res.map((item: any) => item.download_url)
+      const imgUrls = Array(30)
+        .fill(0)
+        .map((_item: any, index) => {
+          return `https://picsum.photos/id/${index + 1}/200/300`
+        })
 
       setImgs(imgUrls)
     }
@@ -73,7 +75,7 @@ const App = () => {
       /> */}
 
       <FlipBook
-        containerStyle={{ display: isFullscreen ? 'block' : 'none' }}
+        // containerStyle={{ display: isFullscreen ? 'block' : 'none' }}
         containerRef={ref}
         id={'view'}
         src={imgs}

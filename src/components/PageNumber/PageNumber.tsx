@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './PageNumber.module.less'
 
 interface PageNumberProps {
-  value: number
+  value?: number
   className?: string
   onChange: (value: string) => void
   step: number
@@ -10,7 +10,7 @@ interface PageNumberProps {
 }
 
 const PageNumber: React.FC<PageNumberProps> = (props) => {
-  const { value, className = '', onChange, max = 0, step } = props
+  const { value = 0, className = '', onChange, max = 0, step } = props
 
   const valueToShow = value + 1
 

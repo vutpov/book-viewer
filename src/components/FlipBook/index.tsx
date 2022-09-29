@@ -1,12 +1,13 @@
-import React, { useState, useCallback, useReducer, useEffect } from 'react'
+import React, { useState, useReducer, useEffect } from 'react'
 import PageNavigator from '../PageNavigator/PageNavigator'
 import styles from './styles.module.less'
-import Slider from 'rc-slider'
+import Slider from '../Slider/Slider'
 import PageNumber from '../PageNumber/PageNumber'
 import ViewTypeToggler from '../ViewTypeToggler/ViewTypeToggler'
 import { usePrevious } from 'ahooks'
 import { ActionType, defaultState, reducer, ViewType } from '../reducer'
 import FlipBookChildren from './FlipBookChildren'
+import { useThrottleFn } from 'ahooks'
 
 interface props {
   src: string[]
@@ -62,7 +63,7 @@ const BookViewer: React.FC<props> = (props) => {
 
   const [pageNumberValue, setPageNumberValue] = useState(state.currIndex)
 
-  const changeIndex = useCallback(
+  const { run: changeIndex } = useThrottleFn(
     (indexToChange: number) => {
       const newIndex = state.currIndex + indexToChange
 
@@ -81,7 +82,22 @@ const BookViewer: React.FC<props> = (props) => {
         payload: newCurrIndex
       })
     },
-    [state.currIndex, src]
+    {
+      wait: 500
+    }
+  )
+
+  const { run: sliderChange } = useThrottleFn(
+    (value: number) => {
+      setPageNumberValue(value)
+      dispatch({
+        type: ActionType.changePage,
+        payload: value
+      })
+    },
+    {
+      wait: 500
+    }
   )
 
   const oldIndex = usePrevious(state.currIndex)
@@ -151,11 +167,7 @@ const BookViewer: React.FC<props> = (props) => {
             value={pageNumberValue}
             max={src.length - 1}
             onChange={(value) => {
-              setPageNumberValue(value)
-              dispatch({
-                type: ActionType.changePage,
-                payload: value
-              })
+              sliderChange(value)
             }}
           />
 

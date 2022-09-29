@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useReducer, useEffect } from 'react'
 import PageNavigator from '../PageNavigator/PageNavigator'
 import styles from './styles.module.less'
-import Slider from 'rc-slider'
+import Slider from '../Slider/Slider'
 import PageNumber from '../PageNumber/PageNumber'
 import { useTransition, animated } from 'react-spring'
 import ViewTypeToggler from '../ViewTypeToggler/ViewTypeToggler'
