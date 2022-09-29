@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import 'rc-slider/assets/index.css'
-import { BookViewer } from 'book-viewer'
+//@ts-ignore
+import { BookViewer, FlipBook } from 'book-viewer'
 import 'book-viewer/dist/index.css'
 import { useFullscreen } from 'ahooks'
 
@@ -9,9 +10,11 @@ const App = () => {
 
   useEffect(() => {
     const getImgs = async () => {
-      let res: any = await fetch('https://picsum.photos/v2/list')
-      res = await res.json()
-      const imgUrls = res.map((item: any) => item.download_url)
+      const imgUrls = Array(30)
+        .fill(0)
+        .map((_item: any, index) => {
+          return `https://picsum.photos/id/${index + 1}/200/300`
+        })
 
       setImgs(imgUrls)
     }
@@ -39,7 +42,7 @@ const App = () => {
         open
       </button>
 
-      <BookViewer
+      {/* <BookViewer
         containerStyle={{ display: isFullscreen ? 'block' : 'none' }}
         containerRef={ref}
         id={'view'}
@@ -69,10 +72,35 @@ const App = () => {
             <div>hello</div>
           </div>
         }
-        springOptions={{
-          immediate: true
-        }}
-        transitionTimeout={0}
+      /> */}
+
+      <FlipBook
+        // containerStyle={{ display: isFullscreen ? 'block' : 'none' }}
+        containerRef={ref}
+        id={'view'}
+        src={imgs}
+        prefixControl={
+          <div
+            style={{
+              width: '100%'
+            }}
+          >
+            prefix
+          </div>
+        }
+        suffixControl={
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}
+          >
+            <div>1</div>
+            <div>hello</div>
+          </div>
+        }
       />
     </>
   )
