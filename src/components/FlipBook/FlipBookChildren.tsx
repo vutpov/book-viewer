@@ -81,8 +81,8 @@ const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
   return (
     <React.Fragment>
       {vitualizedChunked.map((item) => {
-        const backSrc = item.value[1].src
-        const frontSrc = item.value[0].src
+        const backSrc = item.value[1]?.src
+        const frontSrc = item.value[0]?.src
         const index = item.index
 
         let zIndex: number
