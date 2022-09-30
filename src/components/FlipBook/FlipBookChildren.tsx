@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { BookViewerState } from '../reducer'
 import styles from './styles.module.less'
 import lodash from 'lodash'
@@ -13,33 +13,11 @@ interface FlipBookChildrenProps {
 const FlipOnePage: React.FC<FlipBookChildrenProps> = (props) => {
   const { state, src } = props
 
-  const shouldShow = useCallback(
-    (args: { index: number }) => {
-      let beginIndex = state.currIndex
-      let result: boolean
-      const { index } = args
-
-      result = beginIndex === index
-      return Boolean(result)
-    },
-    [state.currIndex, src, state.viewType]
-  )
+  let beginIndex = state.currIndex
 
   return (
     <React.Fragment>
-      {src.map((item, index) => {
-        let visible = shouldShow({
-          index
-        })
-
-        let className = visible ? styles.visible : ``
-
-        return (
-          <React.Fragment key={index}>
-            <img src={item} className={className} />
-          </React.Fragment>
-        )
-      })}
+      <img src={src[beginIndex]} />
     </React.Fragment>
   )
 }
