@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from 'react'
+import React, { useState, useReducer, useEffect, useRef } from 'react'
 import PageNavigator from '../PageNavigator/PageNavigator'
 import styles from './styles.module.less'
 import Slider from '../Slider/Slider'
@@ -32,7 +32,7 @@ const keyboardObj = {
   39: 1 //right
 }
 
-const BookViewer: React.FC<props> = (props) => {
+const FlipBook: React.FC<props> = (props) => {
   const {
     src,
     onChange,
@@ -118,6 +118,8 @@ const BookViewer: React.FC<props> = (props) => {
     ? `${styles.container} ${pContainerClassName}`
     : styles.container
 
+  const pageViewerRef = useRef<HTMLDivElement>()
+
   return (
     <div
       {...rest}
@@ -140,11 +142,13 @@ const BookViewer: React.FC<props> = (props) => {
         }}
       >
         <div className={`page-viewer-container ${styles.pageViewerContainer}`}>
-          <div className={getPageViewerClasses()}>
+          {/* @ts-ignore */}
+          <div className={`${getPageViewerClasses()}`} ref={pageViewerRef}>
             <FlipBookChildren
               src={src}
               state={state}
               placeholder={placeholder}
+              containerRef={pageViewerRef}
             />
           </div>
 
@@ -220,4 +224,4 @@ const BookViewer: React.FC<props> = (props) => {
   )
 }
 
-export default BookViewer
+export default FlipBook

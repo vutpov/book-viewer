@@ -1,13 +1,17 @@
-import React, { useMemo } from 'react'
+//@ts-nocheck
+import React, { useMemo, useEffect } from 'react'
 import { BookViewerState } from '../reducer'
 import styles from './styles.module.less'
 import lodash from 'lodash'
-import { vitualizeArray } from '../../utils'
+import { getUUId, vitualizeArray } from '../../utils'
+import Img from '../Img'
+import usePrevious from '../../hooks/usePrevious'
 
 interface FlipBookChildrenProps {
   state: BookViewerState
   src: string[]
   placeholder?: React.ReactNode
+  containerRef?: React.MutableRefObject<HTMLDivElement | undefined>
 }
 
 const FlipOnePage: React.FC<FlipBookChildrenProps> = (props) => {
@@ -17,13 +21,13 @@ const FlipOnePage: React.FC<FlipBookChildrenProps> = (props) => {
 
   return (
     <React.Fragment>
-      <img src={src[beginIndex]} />
+      <Img imageSrc={src[beginIndex]} />
     </React.Fragment>
   )
 }
 
 const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
-  const { src, state } = props
+  const { src, state, containerRef } = props
 
   const chunkedSrc = useMemo(() => {
     let result = src.map((item, index) => {
@@ -56,20 +60,54 @@ const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
     padding: 5
   })
 
+  const compId = useMemo(() => {
+    return getUUId()
+  }, [])
+
+  const oldIndex = usePrevious(state.currIndex)
+
+  useEffect(() => {
+    if (oldIndex !== state.currIndex && Number.isInteger(oldIndex)) {
+      let prevPage = containerRef?.current?.querySelector(
+        `#p-${oldIndex}-${compId}`
+      )
+
+      if (prevPage) {
+        let target = prevPage.querySelector('.back')
+
+        if (!target?.classList.contains('visible')) {
+          return
+        }
+
+        let clickEvent = document.createEvent('MouseEvents')
+        clickEvent.initEvent('dblclick', true, true)
+        target.dispatchEvent(clickEvent)
+      }
+    }
+  }, [state.currIndex])
+
   return (
     <React.Fragment>
       {vitualizedChunked.map((item) => {
-        const backSrc = item.value[1]?.src
-        const frontSrc = item.value[0]?.src
+        const backSrc = item.value[0]?.src
+        const frontSrc = item.value[1]?.src
         const index = item.index
 
         let zIndex: number
         let flipStyle: React.CSSProperties = {}
 
+        let styleBack: React.CSSProperties = {}
+        let styleFront: React.CSSProperties = {}
+
         if (index == visibleChunkIndex) {
           zIndex = chunkedSrc.length
+
           flipStyle = {
             transform: `rotateY(-180deg)`
+          }
+
+          styleFront = {
+            pointerEvents: `none`
           }
         } else {
           if (index > visibleChunkIndex) {
@@ -90,16 +128,21 @@ const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
         }
 
         return (
-          <div className={styles.flip} key={index} style={flipStyle}>
+          <div
+            className={styles.flip}
+            key={index}
+            style={flipStyle}
+            id={`p-${index}-${compId}`}
+          >
             {backSrc && (
-              <div className={styles.back}>
-                <img src={backSrc} />
+              <div className={styles.back} style={styleBack}>
+                <Img imageSrc={backSrc} visible={false} className={'back'} />
               </div>
             )}
 
             {frontSrc && (
-              <div className={styles.front}>
-                <img src={frontSrc} />
+              <div className={styles.front} style={styleFront}>
+                <Img imageSrc={frontSrc} visible={false} className={'front'} />
               </div>
             )}
           </div>
