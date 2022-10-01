@@ -1,6 +1,7 @@
+//@ts-nocheck
 import React, { useState, useEffect, useRef } from 'react'
 import 'rc-slider/assets/index.css'
-//@ts-ignore
+
 import { BookViewer, FlipBook } from 'book-viewer'
 import 'book-viewer/dist/index.css'
 import { useFullscreen } from 'ahooks'
