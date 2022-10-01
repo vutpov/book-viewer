@@ -21,7 +21,9 @@ const FlipOnePage: React.FC<FlipBookChildrenProps> = (props) => {
 
   return (
     <React.Fragment>
-      <Img imageSrc={src[beginIndex]} />
+      <div>
+        <Img imageSrc={src[beginIndex]} />
+      </div>
     </React.Fragment>
   )
 }
