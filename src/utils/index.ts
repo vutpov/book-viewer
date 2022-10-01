@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid'
+
 export const vitualizeArray = <T>(args: {
   arr: T[]
   padding: number
@@ -30,4 +32,8 @@ export const vitualizeArray = <T>(args: {
   })
 
   return result
+}
+
+export const getUUId = () => {
+  return uuid()
 }

@@ -7,6 +7,7 @@ import { useTransition, animated } from 'react-spring'
 import ViewTypeToggler from '../ViewTypeToggler/ViewTypeToggler'
 import { usePrevious } from 'ahooks'
 import { ActionType, defaultState, reducer, ViewType } from '../reducer'
+import Img from '../Img'
 
 interface props {
   src: string[]
@@ -124,8 +125,8 @@ const BookViewer: React.FC<props> = (props) => {
 
       result = (
         <React.Fragment>
-          {firstSrc ? <img src={firstSrc} /> : placeholder}
-          {secondSrc ? <img src={secondSrc} /> : placeholder}
+          {firstSrc ? <Img imageSrc={firstSrc} /> : placeholder}
+          {secondSrc ? <Img imageSrc={secondSrc} /> : placeholder}
         </React.Fragment>
       )
 
@@ -136,7 +137,7 @@ const BookViewer: React.FC<props> = (props) => {
       result = (
         <React.Fragment>
           {' '}
-          {firstSrc ? <img src={firstSrc} /> : placeholder}
+          {firstSrc ? <Img imageSrc={firstSrc} /> : placeholder}
         </React.Fragment>
       )
 

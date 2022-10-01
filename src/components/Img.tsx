@@ -1,6 +1,6 @@
 //@ts-nocheck
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {
   Magnifier,
   MagnifierProps,
@@ -24,23 +24,34 @@ const Img: React.FC<ImgProps> = (props) => {
     setVisible(pVisible)
   }, [pVisible])
 
-  let magnifierClassName = `${style.bookMagnifier} ${className}`
+  const ref = useRef<HTMLDivElement>()
+
+  let magnifierClassName = `magifier ${style.bookMagnifier} ${className}`
 
   if (visible) {
     magnifierClassName = `${magnifierClassName} ${style.visible}`
   }
 
   return (
-    <Magnifier
-      onImageLoad={() => {
-        setVisible(true)
+    <div
+      ref={ref}
+      onDoubleClick={() => {
+        const child = ref.current?.firstElementChild
+
+        child?.classList.toggle('zoom')
       }}
-      mouseActivation={MOUSE_ACTIVATION.DOUBLE_CLICK}
-      touchActivation={TOUCH_ACTIVATION.DOUBLE_TAP}
-      dragToMove={false}
-      {...rest}
-      className={magnifierClassName}
-    />
+    >
+      <Magnifier
+        onImageLoad={() => {
+          setVisible(true)
+        }}
+        mouseActivation={MOUSE_ACTIVATION.DOUBLE_CLICK}
+        touchActivation={TOUCH_ACTIVATION.DOUBLE_TAP}
+        dragToMove={true}
+        {...rest}
+        className={magnifierClassName}
+      />
+    </div>
   )
 }
 

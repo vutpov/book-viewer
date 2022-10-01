@@ -13,7 +13,7 @@ const App = () => {
       const imgUrls = Array(30)
         .fill(0)
         .map((_item: any, index) => {
-          return `https://picsum.photos/id/${index + 1}/200/300`
+          return `https://picsum.photos/id/${index + 1}/800`
         })
 
       setImgs(imgUrls)
@@ -75,7 +75,7 @@ const App = () => {
       /> */}
 
       <FlipBook
-        // containerStyle={{ display: isFullscreen ? 'block' : 'none' }}
+        containerStyle={{ display: isFullscreen ? 'block' : 'none' }}
         containerRef={ref}
         id={'view'}
         src={imgs}
