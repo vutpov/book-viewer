@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from './ViewTypeToggler.module.less'
 
-interface ViewTypeTogglerProps<T> {
+export interface ViewTypeTogglerProps<T> {
   options: {
     label: React.ReactNode
     value: T

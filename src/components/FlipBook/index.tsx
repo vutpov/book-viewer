@@ -24,6 +24,7 @@ interface props {
     immediate?: boolean
     [index: string]: any
   }
+  viewTypeTogglerLabels?: [React.ReactNode, React.ReactNode]
   [index: string]: any
 }
 
@@ -45,6 +46,7 @@ const FlipBook: React.FC<props> = (props) => {
     suffixControl,
     prefixControl,
     placeholder,
+    viewTypeTogglerLabels = ['One Page', 'Two Page'],
     ...rest
   } = props
 
@@ -207,11 +209,11 @@ const FlipBook: React.FC<props> = (props) => {
               }}
               options={[
                 {
-                  label: 'One Page',
+                  label: viewTypeTogglerLabels[0],
                   value: ViewType.onePage
                 },
                 {
-                  label: 'Two Page',
+                  label: viewTypeTogglerLabels[1],
                   value: ViewType.twoPage
                 }
               ]}

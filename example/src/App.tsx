@@ -23,6 +23,8 @@ const App = () => {
     getImgs()
   }, [])
 
+  console.log(imgs)
+
   const ref = useRef<any>()
   const [isFullscreen, { setFull }] = useFullscreen(ref)
 
@@ -89,6 +91,7 @@ const App = () => {
             prefix
           </div>
         }
+        viewTypeTogglerLabels={['one', 'two']}
         suffixControl={
           <div
             style={{
