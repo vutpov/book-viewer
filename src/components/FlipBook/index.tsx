@@ -1,17 +1,17 @@
-import React, { useState, useReducer, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import PageNavigator from '../PageNavigator/PageNavigator'
 import styles from './styles.module.less'
 import Slider from '../Slider/Slider'
 import PageNumber from '../PageNumber/PageNumber'
 import ViewTypeToggler from '../ViewTypeToggler/ViewTypeToggler'
 import { usePrevious } from 'ahooks'
-import { ActionType, defaultState, reducer, ViewType } from '../reducer'
+import { ActionType, BookContext, ViewType } from '../reducer'
 import FlipBookChildren from './FlipBookChildren'
 import { useThrottleFn } from 'ahooks'
 
 interface props {
   src: string[]
-  onChange?: (args: { oldIndex: number; newIndex: number }) => void
+  onChange?: (args: { oldIndex?: number; newIndex: number }) => void
   containerClassName?: string
   containerRef?: React.RefObject<any> | null
   pageIndex?: number
@@ -61,7 +61,7 @@ const FlipBook: React.FC<props> = (props) => {
     }
   }, [pageIndex])
 
-  const [state, dispatch] = useReducer(reducer, defaultState)
+  const { dispatch, ...state } = useContext(BookContext)
 
   const [pageNumberValue, setPageNumberValue] = useState(state.currIndex)
 
@@ -121,6 +121,56 @@ const FlipBook: React.FC<props> = (props) => {
     : styles.container
 
   const pageViewerRef = useRef<HTMLDivElement>()
+
+  useEffect(() => {
+    let touchstartX = 0
+    let touchendX = 0
+
+    const swipeLeft = () => {
+      changeIndex(state.step)
+    }
+
+    const swipeRight = () => {
+      changeIndex(state.step * -1)
+    }
+
+    function checkDirection() {
+      let distance = Math.abs(touchendX - touchstartX)
+
+      let containerWidth =
+        pContainerRef?.current.offsetWidth || window.innerWidth
+
+      let shouldSwipe = distance >= 0.6 * containerWidth && !state.zoomSrc
+
+      if (!shouldSwipe) {
+        return
+      }
+
+      if (touchendX < touchstartX) {
+        swipeLeft()
+      } else if (touchendX > touchstartX) {
+        swipeRight()
+      }
+    }
+
+    const touchStart = (e: any) => {
+      touchstartX = e.changedTouches[0].screenX
+    }
+
+    const touched = (e: any) => {
+      touchendX = e.changedTouches[0].screenX
+      checkDirection()
+    }
+
+    document.addEventListener('touchstart', touchStart)
+
+    document.addEventListener('touchend', touched)
+
+    return () => {
+      document.removeEventListener('touchstart', touchStart)
+      document.removeEventListener('touchend', touched)
+    }
+  }, [state.step, state.zoomSrc])
 
   return (
     <div

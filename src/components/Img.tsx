@@ -1,16 +1,12 @@
-//@ts-nocheck
-
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import {
   Magnifier,
   MagnifierProps,
-  MagnifierContainer,
-  MagnifierPreview,
-  MagnifierZoom,
   MOUSE_ACTIVATION,
   TOUCH_ACTIVATION
 } from 'react-image-magnifiers'
 import style from './Img.module.less'
+import { ActionType, BookContext } from './reducer'
 interface ImgProps extends MagnifierProps {
   visible?: boolean
 }
@@ -19,7 +15,7 @@ const Img: React.FC<ImgProps> = (props) => {
   const { visible: pVisible = true, className = '', ...rest } = props
 
   const [visible, setVisible] = useState(pVisible)
-
+  const { dispatch } = useContext(BookContext)
   useEffect(() => {
     setVisible(pVisible)
   }, [pVisible])
@@ -34,6 +30,7 @@ const Img: React.FC<ImgProps> = (props) => {
 
   return (
     <div
+      //@ts-ignore
       ref={ref}
       onDoubleClick={() => {
         const child = ref.current?.firstElementChild
@@ -48,6 +45,18 @@ const Img: React.FC<ImgProps> = (props) => {
         mouseActivation={MOUSE_ACTIVATION.DOUBLE_CLICK}
         touchActivation={TOUCH_ACTIVATION.DOUBLE_TAP}
         dragToMove={true}
+        onZoomStart={() => {
+          dispatch({
+            type: ActionType.changeZoom,
+            payload: props.imageSrc
+          })
+        }}
+        onZoomEnd={() => {
+          dispatch({
+            type: ActionType.changeZoom,
+            payload: undefined
+          })
+        }}
         {...rest}
         className={magnifierClassName}
       />
