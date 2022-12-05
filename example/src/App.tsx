@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import 'rc-slider/assets/index.css'
 
-import { BookViewer, FlipBook } from 'book-viewer'
+import { BookViewer, FlipBook, BookProvider } from 'book-viewer'
 import 'book-viewer/dist/index.css'
 import { useFullscreen } from 'ahooks'
 
@@ -22,6 +22,8 @@ const App = () => {
 
     getImgs()
   }, [])
+
+  console.log(imgs)
 
   const ref = useRef<any>()
   const [isFullscreen, { setFull }] = useFullscreen(ref)
@@ -74,35 +76,37 @@ const App = () => {
           </div>
         }
       /> */}
-
-      <FlipBook
-        containerStyle={{ display: isFullscreen ? 'block' : 'none' }}
-        containerRef={ref}
-        id={'view'}
-        src={imgs}
-        prefixControl={
-          <div
-            style={{
-              width: '100%'
-            }}
-          >
-            prefix
-          </div>
-        }
-        suffixControl={
-          <div
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
-          >
-            <div>1</div>
-            <div>hello</div>
-          </div>
-        }
-      />
+      <BookProvider>
+        <FlipBook
+          containerStyle={{ display: isFullscreen ? 'block' : 'none' }}
+          containerRef={ref}
+          id={'view'}
+          src={imgs}
+          prefixControl={
+            <div
+              style={{
+                width: '100%'
+              }}
+            >
+              prefix
+            </div>
+          }
+          viewTypeTogglerLabels={['one', 'two']}
+          suffixControl={
+            <div
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <div>1</div>
+              <div>hello</div>
+            </div>
+          }
+        />
+      </BookProvider>
     </>
   )
 }

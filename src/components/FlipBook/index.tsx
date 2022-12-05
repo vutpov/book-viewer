@@ -1,17 +1,17 @@
-import React, { useState, useReducer, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import PageNavigator from '../PageNavigator/PageNavigator'
 import styles from './styles.module.less'
 import Slider from '../Slider/Slider'
 import PageNumber from '../PageNumber/PageNumber'
 import ViewTypeToggler from '../ViewTypeToggler/ViewTypeToggler'
 import { usePrevious } from 'ahooks'
-import { ActionType, defaultState, reducer, ViewType } from '../reducer'
+import { ActionType, BookContext, ViewType } from '../reducer'
 import FlipBookChildren from './FlipBookChildren'
 import { useThrottleFn } from 'ahooks'
 
 interface props {
   src: string[]
-  onChange?: (args: { oldIndex: number; newIndex: number }) => void
+  onChange?: (args: { oldIndex?: number; newIndex: number }) => void
   containerClassName?: string
   containerRef?: React.RefObject<any> | null
   pageIndex?: number
@@ -24,6 +24,7 @@ interface props {
     immediate?: boolean
     [index: string]: any
   }
+  viewTypeTogglerLabels?: [React.ReactNode, React.ReactNode]
   [index: string]: any
 }
 
@@ -45,6 +46,7 @@ const FlipBook: React.FC<props> = (props) => {
     suffixControl,
     prefixControl,
     placeholder,
+    viewTypeTogglerLabels = ['One Page', 'Two Page'],
     ...rest
   } = props
 
@@ -59,7 +61,7 @@ const FlipBook: React.FC<props> = (props) => {
     }
   }, [pageIndex])
 
-  const [state, dispatch] = useReducer(reducer, defaultState)
+  const { dispatch, ...state } = useContext(BookContext)
 
   const [pageNumberValue, setPageNumberValue] = useState(state.currIndex)
 
@@ -119,6 +121,58 @@ const FlipBook: React.FC<props> = (props) => {
     : styles.container
 
   const pageViewerRef = useRef<HTMLDivElement>()
+
+  useEffect(() => {
+    let touchstartX = 0
+    let touchendX = 0
+
+    const swipeLeft = () => {
+      changeIndex(state.step)
+    }
+
+    const swipeRight = () => {
+      changeIndex(state.step * -1)
+    }
+
+    function checkDirection() {
+      let distance = Math.abs(touchendX - touchstartX)
+
+      let containerWidth =
+        pContainerRef?.current.offsetWidth || window.innerWidth
+
+      let coverage = 0.5
+
+      let shouldSwipe = distance >= coverage * containerWidth && !state.zoomSrc
+
+      if (!shouldSwipe) {
+        return
+      }
+
+      if (touchendX < touchstartX) {
+        swipeLeft()
+      } else if (touchendX > touchstartX) {
+        swipeRight()
+      }
+    }
+
+    const touchStart = (e: any) => {
+      touchstartX = e.changedTouches[0].screenX
+    }
+
+    const touched = (e: any) => {
+      touchendX = e.changedTouches[0].screenX
+      checkDirection()
+    }
+
+    document.addEventListener('touchstart', touchStart)
+
+    document.addEventListener('touchend', touched)
+
+    return () => {
+      document.removeEventListener('touchstart', touchStart)
+      document.removeEventListener('touchend', touched)
+    }
+  }, [state.step, state.zoomSrc])
 
   return (
     <div
@@ -207,11 +261,11 @@ const FlipBook: React.FC<props> = (props) => {
               }}
               options={[
                 {
-                  label: 'One Page',
+                  label: viewTypeTogglerLabels[0],
                   value: ViewType.onePage
                 },
                 {
-                  label: 'Two Page',
+                  label: viewTypeTogglerLabels[1],
                   value: ViewType.twoPage
                 }
               ]}
