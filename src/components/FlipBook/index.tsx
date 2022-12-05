@@ -140,7 +140,9 @@ const FlipBook: React.FC<props> = (props) => {
       let containerWidth =
         pContainerRef?.current.offsetWidth || window.innerWidth
 
-      let shouldSwipe = distance >= 0.6 * containerWidth && !state.zoomSrc
+      let coverage = 0.5
+
+      let shouldSwipe = distance >= coverage * containerWidth && !state.zoomSrc
 
       if (!shouldSwipe) {
         return
