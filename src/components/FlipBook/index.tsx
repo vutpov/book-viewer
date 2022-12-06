@@ -7,7 +7,7 @@ import ViewTypeToggler from '../ViewTypeToggler/ViewTypeToggler'
 import { usePrevious } from 'ahooks'
 import { ActionType, BookContext, ViewType } from '../reducer'
 import FlipBookChildren from './FlipBookChildren'
-import { useThrottleFn } from 'ahooks'
+import { useThrottleFn, useDebounceEffect } from 'ahooks'
 
 interface props {
   src: string[]
@@ -122,57 +122,63 @@ const FlipBook: React.FC<props> = (props) => {
 
   const pageViewerRef = useRef<HTMLDivElement>()
 
-  useEffect(() => {
-    let touchstartX = 0
-    let touchendX = 0
+  useDebounceEffect(
+    () => {
+      let touchstartX = 0
+      let touchendX = 0
 
-    const swipeLeft = () => {
-      changeIndex(state.step)
-    }
+      const swipeLeft = () => {
+        changeIndex(state.step)
+      }
 
-    const swipeRight = () => {
-      changeIndex(state.step * -1)
-    }
+      const swipeRight = () => {
+        changeIndex(state.step * -1)
+      }
 
-    function checkDirection() {
-      let distance = Math.abs(touchendX - touchstartX)
+      function checkDirection() {
+        let shouldSwipe = !state.zoomSrc
 
-      let containerWidth =
-        pContainerRef?.current.offsetWidth || window.innerWidth
+        if (!shouldSwipe) {
+          return
+        }
 
-      let coverage = 0.5
+        if (touchendX < touchstartX) {
+          swipeLeft()
+        } else if (touchendX > touchstartX) {
+          swipeRight()
+        }
+      }
 
-      let shouldSwipe = distance >= coverage * containerWidth && !state.zoomSrc
+      const touchStart = (e: any) => {
+        touchstartX = e.changedTouches[0].screenX
+      }
 
-      if (!shouldSwipe) {
+      const touched = (e: any) => {
+        touchendX = e.changedTouches[0].screenX
+        checkDirection()
+      }
+
+      if (!pageViewerRef.current) {
         return
       }
 
-      if (touchendX < touchstartX) {
-        swipeLeft()
-      } else if (touchendX > touchstartX) {
-        swipeRight()
+      pageViewerRef.current.addEventListener('touchstart', touchStart)
+
+      pageViewerRef.current.addEventListener('touchend', touched)
+
+      return () => {
+        if (!pageViewerRef.current) {
+          return
+        }
+        pageViewerRef.current.removeEventListener('touchstart', touchStart)
+        pageViewerRef.current.removeEventListener('touchend', touched)
       }
+    },
+    [state.step, state.zoomSrc],
+    {
+      wait: 90
     }
-
-    const touchStart = (e: any) => {
-      touchstartX = e.changedTouches[0].screenX
-    }
-
-    const touched = (e: any) => {
-      touchendX = e.changedTouches[0].screenX
-      checkDirection()
-    }
-
-    document.addEventListener('touchstart', touchStart)
-
-    document.addEventListener('touchend', touched)
-
-    return () => {
-      document.removeEventListener('touchstart', touchStart)
-      document.removeEventListener('touchend', touched)
-    }
-  }, [state.step, state.zoomSrc])
+  )
 
   return (
     <div

@@ -1,7 +1,6 @@
 //@ts-nocheck
 import React, { useState, useEffect, useRef } from 'react'
 import 'rc-slider/assets/index.css'
-
 import { BookViewer, FlipBook, BookProvider } from 'book-viewer'
 import 'book-viewer/dist/index.css'
 import { useFullscreen } from 'ahooks'
@@ -14,7 +13,7 @@ const App = () => {
       const imgUrls = Array(30)
         .fill(0)
         .map((_item: any, index) => {
-          return `https://picsum.photos/id/${index + 1}/800`
+          return `https://picsum.photos/id/${index + 1}/1600`
         })
 
       setImgs(imgUrls)
@@ -22,8 +21,6 @@ const App = () => {
 
     getImgs()
   }, [])
-
-  console.log(imgs)
 
   const ref = useRef<any>()
   const [isFullscreen, { setFull }] = useFullscreen(ref)
