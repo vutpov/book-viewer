@@ -21,9 +21,7 @@ const FlipOnePage: React.FC<FlipBookChildrenProps> = (props) => {
 
   return (
     <React.Fragment>
-      <div>
-        <Img imageSrc={src[beginIndex]} />
-      </div>
+      <Img imageSrc={src[beginIndex]} />
     </React.Fragment>
   )
 }
@@ -157,15 +155,14 @@ const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
 const FlipBookChildren: React.FC<FlipBookChildrenProps> = (props) => {
   const { state } = props
 
-  if (state.viewType === 'onePage') {
-    return <FlipOnePage {...props} />
-  }
-
-  return (
-    <React.Fragment>
+  let children =
+    state.viewType === 'onePage' ? (
+      <FlipOnePage {...props} />
+    ) : (
       <FlipTwoPage {...props} />
-    </React.Fragment>
-  )
+    )
+
+  return children
 }
 
 export default FlipBookChildren
