@@ -13,7 +13,9 @@ const App = () => {
       const imgUrls = Array(30)
         .fill(0)
         .map((_item: any, index) => {
-          return `https://picsum.photos/id/${index + 1}/1600`
+          return `https://api.akarabook.com/api/other/resource/BOK0000000362/${
+            index + 1
+          }.png?token=`
         })
 
       setImgs(imgUrls)
