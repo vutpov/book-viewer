@@ -29,7 +29,7 @@ interface props {
 }
 
 const keyboardObj = {
-  37: -1, //left
+  37: -1, //key left
   39: 1 //right
 }
 
