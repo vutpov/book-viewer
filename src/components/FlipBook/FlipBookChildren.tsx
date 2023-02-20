@@ -30,14 +30,38 @@ const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
   const { src, state, containerRef } = props
 
   const chunkedSrc = useMemo(() => {
-    let result = src.map((item, index) => {
+    
+    let sorted = []
+    for(let i =0; i<src.length; i++){
+      if(i % 2 == 0){
+        sorted = [...sorted, src[i]]
+      }else{
+        sorted = [...sorted, src[i-1]]
+        sorted[i-1] = src[i]
+      }
+    }
+
+
+    sorted = sorted.map((item, index)=>{
       return {
         src: item,
-        index
+        index: index + 2
       }
     })
 
-    return lodash.chunk(result, 2)
+    sorted = [
+      {
+        index:0
+      },
+      {
+        index: 1
+      },
+      ...sorted
+    ]
+
+    console.log(sorted, `hello`)
+
+    return lodash.chunk(sorted, 2)
   }, [src])
 
   const visibleChunkIndex = useMemo(() => {
