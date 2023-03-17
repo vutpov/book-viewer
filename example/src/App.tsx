@@ -1,21 +1,26 @@
 //@ts-nocheck
 import React, { useState, useEffect, useRef } from 'react'
 import 'rc-slider/assets/index.css'
-import { BookViewer, FlipBook, BookProvider } from 'book-viewer'
+import { FlipBook, BookProvider } from 'book-viewer'
 import 'book-viewer/dist/index.css'
-import { useFullscreen } from 'ahooks'
 
 const App = () => {
   const [imgs, setImgs] = useState<string[]>([])
-
+  const [show, setShow] = useState(false)
   useEffect(() => {
     const getImgs = async () => {
+      const getBookLink = (page) => {
+        return `https://api.akarabook.com/api/other/resource/BOK0000000362/${page}.png?token=`
+      }
+
+      const getLoremLink = (page) => {
+        return `https://picsum.photos/id/${page}/800/800`
+      }
+
       const imgUrls = Array(30)
         .fill(0)
         .map((_item: any, index) => {
-          return `https://api.akarabook.com/api/other/resource/BOK0000000362/${
-            index + 1
-          }.png?token=`
+          return getBookLink(index + 1)
         })
 
       setImgs(imgUrls)
@@ -25,86 +30,56 @@ const App = () => {
   }, [])
 
   const ref = useRef<any>()
-  const [isFullscreen, { setFull }] = useFullscreen(ref)
-
-  useEffect(() => {
-    if (isFullscreen) {
-      const el = document.getElementById('__book-viewer-btn-next')!!
-      el.focus()
-    }
-  }, [isFullscreen])
 
   return (
     <>
       <button
         onClick={() => {
-          setFull()
+          setShow(true)
         }}
       >
         open
       </button>
 
-      {/* <BookViewer
-        containerStyle={{ display: isFullscreen ? 'block' : 'none' }}
-        containerRef={ref}
-        id={'view'}
-        src={imgs}
-        onChange={(args) => {
-          console.log(args)
-        }}
-        prefixControl={
-          <div
-            style={{
-              width: '100%'
-            }}
-          >
-            prefix
-          </div>
-        }
-        suffixControl={
-          <div
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
-          >
-            <div>1</div>
-            <div>hello</div>
-          </div>
-        }
-      /> */}
       <BookProvider>
-        <FlipBook
-          containerStyle={{ display: isFullscreen ? 'block' : 'none' }}
-          containerRef={ref}
-          id={'view'}
-          src={imgs}
-          prefixControl={
-            <div
-              style={{
-                width: '100%'
-              }}
-            >
-              prefix
-            </div>
-          }
-          viewTypeTogglerLabels={['one', 'two']}
-          suffixControl={
-            <div
-              style={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}
-            >
-              <div>1</div>
-              <div>hello</div>
-            </div>
-          }
-        />
+        <div
+          style={{
+            position: `absolute`,
+            top: 0,
+            left: 0,
+            opacity: show ? 1 : 0,
+            zIndex: show ? 1 : -1
+          }}
+        >
+          <FlipBook
+            containerRef={ref}
+            id={'view'}
+            src={imgs}
+            prefixControl={
+              <div
+                style={{
+                  width: '100%'
+                }}
+              >
+                prefix
+              </div>
+            }
+            viewTypeTogglerLabels={['one', 'two']}
+            suffixControl={
+              <div
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <div>1</div>
+                <div>hello</div>
+              </div>
+            }
+          />
+        </div>
       </BookProvider>
     </>
   )

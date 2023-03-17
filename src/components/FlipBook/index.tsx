@@ -142,6 +142,14 @@ const FlipBook: React.FC<props> = (props) => {
           return
         }
 
+        const threshold = 70
+        const swipeDistance = Math.abs(touchstartX - touchendX)
+        const isSwipe = swipeDistance >= threshold
+
+        if (!isSwipe) {
+          return
+        }
+
         if (touchendX < touchstartX) {
           swipeLeft()
         } else if (touchendX > touchstartX) {
