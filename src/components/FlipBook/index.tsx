@@ -188,6 +188,8 @@ const FlipBook: React.FC<props> = (props) => {
     }
   )
 
+  // const { zoomSrc } = useContext(BookContext)
+
   return (
     <div
       {...rest}
@@ -210,6 +212,8 @@ const FlipBook: React.FC<props> = (props) => {
         }}
       >
         <div className={`page-viewer-container ${styles.pageViewerContainer}`}>
+          {/* <div>hello {zoomSrc}</div> */}
+
           {/* @ts-ignore */}
           <div className={`${getPageViewerClasses()}`} ref={pageViewerRef}>
             <FlipBookChildren

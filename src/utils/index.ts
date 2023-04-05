@@ -37,3 +37,10 @@ export const vitualizeArray = <T>(args: {
 export const getUUId = () => {
   return uuid()
 }
+
+export const roundNumber = (value: number, precision = 0) => {
+  let multiplier = Number(`1`.padEnd(precision ? precision + 1 : 0, '0'))
+  const result = Math.round((value + Number.EPSILON) * multiplier) / multiplier
+
+  return result
+}

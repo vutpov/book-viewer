@@ -1,9 +1,8 @@
-//@ts-nocheck
-import React, { useRef, useCallback } from 'react'
-import QuickPinchZoom, {
-  make3dTransformValue,
-  UpdateAction
-} from 'react-quick-pinch-zoom'
+import React, { useRef, useCallback, useContext } from 'react'
+import QuickPinchZoom, { make3dTransformValue } from 'react-quick-pinch-zoom'
+import { BookContext } from './reducer'
+import { ActionType } from './reducer'
+import { roundNumber } from '../utils'
 
 interface ImgProps {
   imageSrc?: string
@@ -16,9 +15,8 @@ const Img: React.FC<ImgProps> = (props) => {
 
   const imgRef = useRef<HTMLImageElement>()
   const zoomRef = useRef<QuickPinchZoom>()
-
-  const currentScale = useRef(1)
-
+  const { dispatch } = useContext(BookContext)
+  let scaleRef = useRef(0)
   const onUpdate = useCallback(({ x, y, scale }) => {
     const { current: img } = imgRef
 
@@ -27,15 +25,26 @@ const Img: React.FC<ImgProps> = (props) => {
 
       img.style.setProperty('transform', value)
     }
+
+    scaleRef.current = roundNumber(scale)
   }, [])
 
   return (
     <QuickPinchZoom
+      //@ts-ignore
       ref={zoomRef}
       onUpdate={onUpdate}
       maxZoom={maxScale}
       doubleTapZoomOutOnMaxScale={true}
       zoomOutFactor={1}
+      onZoomUpdate={() => {
+        let zoomSrc = scaleRef.current <= 1 ? null : props.imageSrc
+
+        dispatch({
+          type: ActionType.changeZoom,
+          payload: zoomSrc
+        })
+      }}
     >
       {/* @ts-ignore */}
       <img src={props.imageSrc} ref={imgRef} />
