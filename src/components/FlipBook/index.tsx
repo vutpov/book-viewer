@@ -25,6 +25,7 @@ interface props {
     [index: string]: any
   }
   viewTypeTogglerLabels?: [React.ReactNode, React.ReactNode]
+  renderPageControl?: (pageControl: React.ReactNode) => React.ReactNode
   [index: string]: any
 }
 
@@ -34,7 +35,7 @@ const keyboardObj = {
 }
 
 const FlipBook: React.FC<props> = (props) => {
-  const {
+  let {
     src,
     onChange,
     containerClassName: pContainerClassName,
@@ -47,6 +48,7 @@ const FlipBook: React.FC<props> = (props) => {
     prefixControl,
     placeholder,
     viewTypeTogglerLabels = ['One Page', 'Two Page'],
+    renderPageControl,
     ...rest
   } = props
 
@@ -188,6 +190,71 @@ const FlipBook: React.FC<props> = (props) => {
     }
   )
 
+  let pageControl = (
+    <div
+      className={`page-control-container ${styles.pageViewerControlContainer}`}
+    >
+      <Slider
+        min={0}
+        value={pageNumberValue}
+        max={src.length - 1}
+        onChange={(value) => {
+          sliderChange(value)
+        }}
+      />
+
+      <div className={styles.pageViewerControlSubContainer}>
+        {prefixControl}
+        <PageNumber
+          onChange={(value) => {
+            let indexToChange
+            try {
+              indexToChange = Number(value)
+            } catch (e) {
+              indexToChange = state.currIndex
+              console.error(e)
+            }
+
+            if (!isNaN(indexToChange)) {
+              indexToChange = indexToChange - 1 - state.currIndex
+              changeIndex(indexToChange)
+            }
+          }}
+          step={state.step}
+          value={pageNumberValue}
+          max={src.length}
+          className={styles.pageNumber}
+        />
+
+        <ViewTypeToggler<ViewType>
+          onClick={(value) => {
+            dispatch({
+              type: ActionType.changeViewType,
+              payload: value
+            })
+          }}
+          options={[
+            {
+              label: viewTypeTogglerLabels[0],
+              value: ViewType.onePage
+            },
+            {
+              label: viewTypeTogglerLabels[1],
+              value: ViewType.twoPage
+            }
+          ]}
+        />
+        {suffixControl}
+      </div>
+    </div>
+  )
+
+  if (!renderPageControl) {
+    renderPageControl = (pageControl) => {
+      return pageControl
+    }
+  }
+
   // const { zoomSrc } = useContext(BookContext)
 
   return (
@@ -235,62 +302,7 @@ const FlipBook: React.FC<props> = (props) => {
           />
         </div>
         <div />
-        <div
-          className={`page-control-container ${styles.pageViewerControlContainer}`}
-        >
-          <Slider
-            min={0}
-            value={pageNumberValue}
-            max={src.length - 1}
-            onChange={(value) => {
-              sliderChange(value)
-            }}
-          />
-
-          <div className={styles.pageViewerControlSubContainer}>
-            {prefixControl}
-            <PageNumber
-              onChange={(value) => {
-                let indexToChange
-                try {
-                  indexToChange = Number(value)
-                } catch (e) {
-                  indexToChange = state.currIndex
-                  console.error(e)
-                }
-
-                if (!isNaN(indexToChange)) {
-                  indexToChange = indexToChange - 1 - state.currIndex
-                  changeIndex(indexToChange)
-                }
-              }}
-              step={state.step}
-              value={pageNumberValue}
-              max={src.length}
-              className={styles.pageNumber}
-            />
-
-            <ViewTypeToggler<ViewType>
-              onClick={(value) => {
-                dispatch({
-                  type: ActionType.changeViewType,
-                  payload: value
-                })
-              }}
-              options={[
-                {
-                  label: viewTypeTogglerLabels[0],
-                  value: ViewType.onePage
-                },
-                {
-                  label: viewTypeTogglerLabels[1],
-                  value: ViewType.twoPage
-                }
-              ]}
-            />
-            {suffixControl}
-          </div>
-        </div>
+        {renderPageControl(pageControl)}
       </div>
     </div>
   )
