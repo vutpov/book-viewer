@@ -1,0 +1,31 @@
+@import "../../styles/variables.less";
+
+.viewTypeTogglerContainer{
+    display: flex;
+
+    button{
+        background-color: fade(@dark-color, 80%);
+        color: white;   
+        box-shadow: none;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+    }
+
+    button:first-child{
+        border-right: 0;
+        border-top-left-radius:@border-radius;
+        border-bottom-left-radius: @border-radius;
+    }
+    button:last-child{
+        border-left: 0;
+        border-top-right-radius: @border-radius;
+        border-bottom-right-radius: @border-radius;
+    }
+}
+
+.btnActive{
+    background-color: @active-color !important;
+}
