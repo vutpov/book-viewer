@@ -7,7 +7,7 @@ import ViewTypeToggler from "../ViewTypeToggler/ViewTypeToggler";
 import { usePrevious } from "ahooks";
 import { ActionType, BookContext, ViewType } from "../reducer";
 import FlipBookChildren from "./FlipBookChildren";
-import { useThrottleFn, useDebounceEffect } from "ahooks";
+import { useThrottleFn } from "ahooks";
 
 interface props {
   src: string[];
@@ -124,71 +124,53 @@ const FlipBook: React.FC<props> = (props) => {
 
   const pageViewerRef = useRef<HTMLDivElement>();
 
-  useDebounceEffect(
-    () => {
-      let touchstartX = 0;
-      let touchendX = 0;
+  let touchstartX = useRef(0);
+  let touchendX = useRef(0);
+  let multiTouches = useRef(false);
 
-      const swipeLeft = () => {
-        changeIndex(state.step);
-      };
+  const touchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchstartX.current = e.changedTouches[0].screenX;
 
-      const swipeRight = () => {
-        changeIndex(state.step * -1);
-      };
+    multiTouches.current = e.touches.length > 1;
+  };
 
-      function checkDirection() {
-        let shouldSwipe = !state.zoomSrc;
+  function checkDirection() {
+    let shouldSwipe = !state.zoomSrc;
 
-        if (!shouldSwipe) {
-          return;
-        }
-
-        const threshold = 70;
-        const swipeDistance = Math.abs(touchstartX - touchendX);
-        const isSwipe = swipeDistance >= threshold;
-
-        if (!isSwipe) {
-          return;
-        }
-
-        if (touchendX < touchstartX) {
-          swipeLeft();
-        } else if (touchendX > touchstartX) {
-          swipeRight();
-        }
-      }
-
-      const touchStart = (e: any) => {
-        touchstartX = e.changedTouches[0].screenX;
-      };
-
-      const touched = (e: any) => {
-        touchendX = e.changedTouches[0].screenX;
-        checkDirection();
-      };
-
-      if (!pageViewerRef.current) {
-        return;
-      }
-
-      pageViewerRef.current.addEventListener("touchstart", touchStart);
-
-      pageViewerRef.current.addEventListener("touchend", touched);
-
-      return () => {
-        if (!pageViewerRef.current) {
-          return;
-        }
-        pageViewerRef.current.removeEventListener("touchstart", touchStart);
-        pageViewerRef.current.removeEventListener("touchend", touched);
-      };
-    },
-    [state.step, state.zoomSrc],
-    {
-      wait: 90,
+    if (!shouldSwipe) {
+      return;
     }
-  );
+
+    const swipeLeft = () => {
+      changeIndex(state.step);
+    };
+
+    const swipeRight = () => {
+      changeIndex(state.step * -1);
+    };
+
+    const threshold = 70;
+    const swipeDistance = Math.abs(touchstartX.current - touchendX.current);
+    const isSwipe = swipeDistance >= threshold;
+
+    if (!isSwipe) {
+      return;
+    }
+
+    if (touchendX.current < touchstartX.current) {
+      swipeLeft();
+    } else if (touchendX.current > touchstartX.current) {
+      swipeRight();
+    }
+  }
+
+  const touched = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchendX.current = e.changedTouches[0].screenX;
+
+    if (!multiTouches.current) {
+      checkDirection();
+    }
+  };
 
   let pageControl = (
     <div
@@ -283,7 +265,16 @@ const FlipBook: React.FC<props> = (props) => {
           {/* <div>hello {zoomSrc}</div> */}
 
           {/* @ts-ignore */}
-          <div className={`${getPageViewerClasses()}`} ref={pageViewerRef}>
+          <div
+            className={`${getPageViewerClasses()}`}
+            // ref={pageViewerRef}
+            onTouchStart={(e) => {
+              touchStart(e);
+            }}
+            onTouchEnd={(e) => {
+              touched(e);
+            }}
+          >
             <FlipBookChildren
               src={src}
               state={state}

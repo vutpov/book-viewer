@@ -34,25 +34,36 @@ const Img: React.FC<ImgProps> = (props) => {
   }, []);
 
   return (
-    <QuickPinchZoom
-      //@ts-ignore
-      ref={zoomRef}
-      onUpdate={onUpdate}
-      maxZoom={maxScale}
-      doubleTapZoomOutOnMaxScale={true}
-      zoomOutFactor={1}
-      onZoomUpdate={() => {
-        let zoomSrc = scaleRef.current <= 1 ? null : props.imageSrc;
+    <>
+      <QuickPinchZoom
+        //@ts-ignore
+        ref={zoomRef}
+        onUpdate={onUpdate}
+        maxZoom={maxScale}
+        doubleTapZoomOutOnMaxScale={true}
+        zoomOutFactor={1}
+        // onZoomEnd={() => {
+        //   let zoomSrc = scaleRef.current == 1 ? null : props.imageSrc;
 
-        dispatch({
-          type: ActionType.changeZoom,
-          payload: zoomSrc,
-        });
-      }}
-    >
-      {/* @ts-ignore */}
-      <img src={props.imageSrc} ref={imgRef} />
-    </QuickPinchZoom>
+        //   dispatch({
+        //     type: ActionType.changeZoom,
+        //     payload: zoomSrc,
+        //   });
+        // }}
+
+        onZoomUpdate={() => {
+          let zoomSrc = scaleRef.current == 1 ? null : props.imageSrc;
+
+          dispatch({
+            type: ActionType.changeZoom,
+            payload: zoomSrc,
+          });
+        }}
+      >
+        {/* @ts-ignore */}
+        <img src={props.imageSrc} ref={imgRef} />
+      </QuickPinchZoom>
+    </>
   );
 };
 

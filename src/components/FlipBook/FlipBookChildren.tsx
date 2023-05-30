@@ -56,8 +56,6 @@ const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
       ...sorted,
     ];
 
-    console.log(sorted, `hello`);
-
     return lodash.chunk(sorted, 2);
   }, [src]);
 

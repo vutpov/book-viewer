@@ -60,8 +60,11 @@ const App = () => {
                 style={{
                   width: "100%",
                 }}
+                onClick={() => {
+                  setShow(false);
+                }}
               >
-                prefix
+                exit
               </div>
             }
             viewTypeTogglerLabels={["one", "two"]}
