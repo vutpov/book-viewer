@@ -1,6 +1,5 @@
 {
   "name": "book-viewer",
-  "private": true,
   "version": "0.1.0",
   "types": "./dist/index.d.ts",
   "source": "./src/index.tsx",
@@ -27,11 +26,13 @@
     "lodash": "^4.17.21",
     "prop-types": "^15.8.1",
     "rc-slider": "^10.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "react-icons": "^4.9.0",
     "react-quick-pinch-zoom": "^4.9.0",
     "uuid": "^9.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.195",
@@ -48,6 +49,8 @@
     "react-scripts": "^5.0.1",
     "typescript": "^5.0.2",
     "vite": "^4.3.9",
-    "vite-plugin-dts": "^2.3.0"
+    "vite-plugin-dts": "^2.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }
