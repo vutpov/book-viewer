@@ -1,0 +1,21 @@
+@import "../../styles/variables.less";
+
+.rc-slider-handle{
+    border-color: @active-color !important;
+}
+
+.rc-slider-track{
+    background-color: @active-color;
+}
+
+.rc-slider-handle:active {
+    border-color: @active-color ;
+    box-shadow: 0 0 5px @active-color;
+    cursor: grabbing;
+}
+
+.rc-slider-handle-dragging {
+    border-color: @active-color !important;
+    box-shadow: 0 0 0 5px @active-color !important;
+    cursor: grabbing;
+}

@@ -41,7 +41,7 @@ const App = () => {
         open
       </button>
 
-      <BookProvider>
+      <BookProvider src={imgs}>
         <div
           style={{
             position: `absolute`,
@@ -54,7 +54,6 @@ const App = () => {
           <FlipBook
             containerRef={ref}
             id={"view"}
-            src={imgs}
             prefixControl={
               <div
                 style={{
