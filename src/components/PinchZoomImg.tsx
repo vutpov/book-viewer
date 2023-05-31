@@ -71,7 +71,7 @@ const Img: React.FC<ImgProps> = (props) => {
           retry={{
             count: 0,
           }}
-          error={`https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png`}
+          error={`https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg`}
         />
       </QuickPinchZoom>
     </>
