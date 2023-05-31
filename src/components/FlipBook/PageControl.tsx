@@ -19,7 +19,7 @@ const PageControl: React.FC<PageControlProps> = (props) => {
     viewTypeTogglerLabels = ["One Page", "Two Page"],
   } = props;
   const { dispatch, src, changeIndex, ...state } = useContext(BookContext);
-  const [pageNumberValue, setPageNumberValue] = useState(state.currIndex);
+  const [pageNumberValue, setPageNumberValue] = useState(state.currIndex || 0);
 
   useDebounceEffect(
     () => {

@@ -87,6 +87,7 @@ export const BookProvider: React.FC<
   const [state, dispatch] = useReducer(reducer, {
     ...defaultState,
     ...props,
+    currIndex: props.currIndex || 0,
   });
 
   useEffect(() => {
@@ -97,6 +98,8 @@ export const BookProvider: React.FC<
   }, [props.src]);
 
   useEffect(() => {
+    if (props.currIndex === undefined) return;
+
     dispatch({
       type: ActionType.changePage,
       payload: props.currIndex,

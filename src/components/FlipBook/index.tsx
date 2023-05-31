@@ -47,17 +47,6 @@ const FlipBook: React.FC<props> = (props) => {
     ...rest
   } = props;
 
-  // useEffect(() => {
-  //   if (pageIndex !== undefined) {
-  //     const value = pageIndex - 1;
-  //     setPageNumberValue(value);
-  //     dispatch({
-  //       type: ActionType.changePage,
-  //       payload: value,
-  //     });
-  //   }
-  // }, [pageIndex]);
-
   const { dispatch, src, changeIndex, ...state } = useContext(BookContext);
 
   const oldIndex = usePrevious(state.currIndex);

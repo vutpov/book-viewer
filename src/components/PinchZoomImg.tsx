@@ -6,6 +6,7 @@ import QuickPinchZoom, {
 import { BookContext } from "./reducer";
 import { ActionType } from "./reducer";
 import { roundNumber } from "../utils";
+import CoolImg from "react-cool-img";
 
 interface ImgProps {
   imageSrc?: string;
@@ -61,7 +62,17 @@ const Img: React.FC<ImgProps> = (props) => {
         }}
       >
         {/* @ts-ignore */}
-        <img src={props.imageSrc} ref={imgRef} />
+        <CoolImg
+          src={props.imageSrc}
+          ref={imgRef}
+          placeholder={
+            "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+          }
+          retry={{
+            count: 0,
+          }}
+          error={`https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png`}
+        />
       </QuickPinchZoom>
     </>
   );
