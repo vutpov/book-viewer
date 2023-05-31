@@ -96,6 +96,13 @@ export const BookProvider: React.FC<
     });
   }, [props.src]);
 
+  useEffect(() => {
+    dispatch({
+      type: ActionType.changePage,
+      payload: props.currIndex,
+    });
+  }, [props.currIndex]);
+
   const { run: changeIndex } = useThrottleFn(
     (indexToChange: number) => {
       const newIndex = state.currIndex + indexToChange;
