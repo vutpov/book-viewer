@@ -161,6 +161,12 @@ const FlipBook: React.FC<props> = (props) => {
           {/* @ts-ignore */}
           <div
             className={`${getPageViewerClasses()}`}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              flexGrow: 1,
+              height: "100%",
+            }}
             // ref={pageViewerRef as any}
             onTouchStart={(e) => {
               touchStart(e);

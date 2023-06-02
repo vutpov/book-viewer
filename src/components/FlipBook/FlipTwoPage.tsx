@@ -101,8 +101,8 @@ const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
 
         let styleBack: React.CSSProperties = {};
         let styleFront: React.CSSProperties = {};
-
-        if (index == visibleChunkIndex) {
+        let isShown = index == visibleChunkIndex;
+        if (isShown) {
           zIndex = chunkedSrc.length;
 
           flipStyle = {
@@ -130,6 +130,22 @@ const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
           zIndex,
         };
 
+        // let backIndex = item.value[0]?.index;
+        // let frontIndex = item.value[1]?.index;
+
+        // let backPlaceholder = state.currIndex == backIndex;
+        // let frontPlaceholder = state.currIndex + 1 == frontIndex;
+
+        // console.log({
+        //   item,
+        //   currIndex: state.currIndex,
+        //   backIndex,
+        //   frontIndex,
+        // });
+
+        let backPlaceholder = false;
+        let frontPlaceholder = false;
+
         return (
           <div
             className={styles.flip}
@@ -139,13 +155,21 @@ const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
           >
             {backSrc && (
               <div className={styles.back} style={styleBack}>
-                <Img imageSrc={backSrc} className={"back"} />
+                <Img
+                  imageSrc={backSrc}
+                  className={"back"}
+                  showPlaceholder={backPlaceholder}
+                />
               </div>
             )}
 
             {frontSrc && (
               <div className={styles.front} style={styleFront}>
-                <Img imageSrc={frontSrc} className={"front"} />
+                <Img
+                  imageSrc={frontSrc}
+                  className={"front"}
+                  showPlaceholder={frontPlaceholder}
+                />
               </div>
             )}
           </div>

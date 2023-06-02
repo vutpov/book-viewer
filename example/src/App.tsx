@@ -20,6 +20,7 @@ const App = () => {
       const imgUrls = Array(30)
         .fill(0)
         .map((_item: any, index) => {
+          // return getLoremLink(index);
           return getBookLink(index + 1);
         });
 
@@ -41,15 +42,18 @@ const App = () => {
         open
       </button>
 
-      <BookProvider src={imgs}>
+      <BookProvider
+        src={imgs}
+        // currIndex={5}
+      >
         <div
-          style={{
-            position: `absolute`,
-            top: 0,
-            left: 0,
-            opacity: show ? 1 : 0,
-            zIndex: show ? 1 : -1,
-          }}
+        // style={{
+        //   position: `absolute`,
+        //   top: 0,
+        //   left: 0,
+        //   opacity: show ? 1 : 0,
+        //   zIndex: show ? 1 : -1,
+        // }}
         >
           <FlipBook
             containerRef={ref}

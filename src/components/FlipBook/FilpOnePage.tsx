@@ -1,11 +1,7 @@
-//@ts-nocheck
 import React, { useContext } from "react";
 import { FlipBookChildrenProps } from "./FlipBookChildren";
 import Img from "../PinchZoomImg";
 import { BookContext } from "../reducer";
-import { Virtuoso } from "react-virtuoso";
-import { FixedSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
 
 const FlipOnePage: React.FC<FlipBookChildrenProps> = () => {
   const state = useContext(BookContext);

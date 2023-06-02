@@ -1,5 +1,4 @@
 import { useThrottleFn } from "ahooks";
-import { DebouncedFunc } from "lodash";
 import React, { useEffect, useReducer } from "react";
 
 const viewTypeObj = {
@@ -10,6 +9,7 @@ const viewTypeObj = {
 export enum ViewType {
   "onePage" = "onePage",
   "twoPage" = "twoPage",
+  "scroll" = "scroll",
 }
 
 export enum ActionType {
@@ -25,6 +25,7 @@ export interface BookViewerState {
   viewType: ViewType;
   zoomSrc?: string;
   src: string[];
+  scrollToItem: boolean;
 }
 
 export const reducer = (
@@ -36,9 +37,18 @@ export const reducer = (
 ) => {
   switch (action.type) {
     case ActionType.changePage:
+      let newCurrIndex =
+        typeof action.payload === "number"
+          ? action.payload
+          : action.payload.index;
+
+      let scrollToItem =
+        typeof action.payload === "number" ? true : action.payload.scrollToItem;
+
       return {
         ...state,
-        currIndex: action.payload,
+        currIndex: newCurrIndex,
+        scrollToItem,
       };
     case ActionType.changeViewType:
       return {
@@ -65,8 +75,9 @@ export const reducer = (
 export const defaultState: BookViewerState = {
   currIndex: 0,
   step: 1,
-  viewType: ViewType.onePage,
+  viewType: ViewType.scroll,
   src: [],
+  scrollToItem: false,
 };
 
 interface BookContextAddOns {
@@ -74,7 +85,14 @@ interface BookContextAddOns {
     type: ActionType;
     payload: any;
   }>;
-  changeIndex: DebouncedFunc<(indexToChange: number) => void>;
+  changeIndex: (
+    args:
+      | number
+      | {
+          index: number;
+          scrollToItem?: boolean | undefined;
+        }
+  ) => void;
 }
 
 export const BookContext = React.createContext<
@@ -107,8 +125,10 @@ export const BookProvider: React.FC<
   }, [props.currIndex]);
 
   const { run: changeIndex } = useThrottleFn(
-    (indexToChange: number) => {
-      const newIndex = state.currIndex + indexToChange;
+    (args: Parameters<BookContextAddOns["changeIndex"]>[0]) => {
+      let argsIndex = typeof args === "number" ? args : args.index;
+      let scrollToItem = typeof args === "number" ? true : args.scrollToItem;
+      const newIndex = state.currIndex + argsIndex;
 
       let newCurrIndex: number;
       if (newIndex < 0) {
@@ -121,7 +141,10 @@ export const BookProvider: React.FC<
 
       dispatch({
         type: ActionType.changePage,
-        payload: newCurrIndex,
+        payload: {
+          index: newCurrIndex,
+          scrollToItem,
+        },
       });
     },
     {

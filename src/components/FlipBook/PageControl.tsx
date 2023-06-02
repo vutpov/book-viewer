@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+//@ts-nocheck
+import { useContext, useEffect, useRef, useState } from "react";
 import Slider from "../Slider/Slider";
 import styles from "./styles.module.less";
 import { ActionType, BookContext, ViewType } from "../reducer";
@@ -21,18 +22,26 @@ const PageControl: React.FC<PageControlProps> = (props) => {
   const { dispatch, src, changeIndex, ...state } = useContext(BookContext);
   const [pageNumberValue, setPageNumberValue] = useState(state.currIndex || 0);
 
+  let shouldUpdateContextPageRef = useRef(state.scrollToItem);
+
   useDebounceEffect(
     () => {
-      dispatch({
-        type: ActionType.changePage,
-        payload: pageNumberValue,
-      });
+      if (shouldUpdateContextPageRef.current) {
+        dispatch({
+          type: ActionType.changePage,
+          payload: { index: pageNumberValue, scrollToItem: true },
+        });
+      }
     },
     [pageNumberValue],
     {
       wait: 90,
     }
   );
+
+  useEffect(() => {
+    shouldUpdateContextPageRef.current = state.scrollToItem;
+  }, [state.scrollToItem]);
 
   useEffect(() => {
     setPageNumberValue(state.currIndex);
@@ -62,10 +71,13 @@ const PageControl: React.FC<PageControlProps> = (props) => {
               indexToChange = state.currIndex;
               console.error(e);
             }
-
+            console.log(indexToChange, state.currIndex, `hello`);
             if (!isNaN(indexToChange)) {
               indexToChange = indexToChange - 1 - state.currIndex;
-              changeIndex(indexToChange);
+              changeIndex({
+                index: indexToChange,
+                scrollToItem: true,
+              });
             }
           }}
           step={state.step}
@@ -81,10 +93,11 @@ const PageControl: React.FC<PageControlProps> = (props) => {
               payload: value,
             });
           }}
+          defaultValue={state.viewType}
           options={[
             {
               label: viewTypeTogglerLabels[0],
-              value: ViewType.onePage,
+              value: ViewType.scroll,
             },
             {
               label: viewTypeTogglerLabels[1],

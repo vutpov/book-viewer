@@ -1,4 +1,4 @@
-import FlipBook from './components/FlipBook'
-import { BookContext, BookProvider } from './components/reducer'
+import FlipBook from "./components/FlipBook";
+import { BookContext, BookProvider } from "./components/reducer";
 
-export { FlipBook, BookContext, BookProvider }
+export { FlipBook, BookContext, BookProvider };
