@@ -13,22 +13,26 @@ const Row: React.FC<any> = (props) => {
   const rootElementId = useMemo(() => {
     return `flip-scroll-container`;
   }, []);
-  const [inViewport, ratio] = useInViewport(ref, {
+  const [inViewport] = useInViewport(ref, {
     root: document.getElementById(rootElementId),
     threshold: [0.75, 1],
   });
-  const { dispatch } = useContext(BookContext);
+  const { dispatch, isScrolling } = useContext(BookContext);
 
   useDebounceEffect(
     () => {
-      if (inViewport && beginIndex !== index) {
+      if (inViewport && beginIndex !== index && isScrolling.current) {
+        // changeIndex({
+        //   index,
+        //   scrollToItem: false,
+        // });
         dispatch({
           type: ActionType.changePage,
           payload: { index, scrollToItem: false },
         });
       }
     },
-    [inViewport, beginIndex, ratio],
+    [inViewport, beginIndex],
     {
       wait: 90,
     }

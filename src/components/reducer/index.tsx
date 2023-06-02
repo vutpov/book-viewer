@@ -1,4 +1,4 @@
-import { useThrottleFn } from "ahooks";
+import { useDebounceFn } from "ahooks";
 import React, { useEffect, useReducer } from "react";
 
 const viewTypeObj = {
@@ -93,6 +93,7 @@ interface BookContextAddOns {
           scrollToItem?: boolean | undefined;
         }
   ) => void;
+  isScrolling: React.MutableRefObject<boolean>;
 }
 
 export const BookContext = React.createContext<
@@ -102,6 +103,8 @@ export const BookContext = React.createContext<
 export const BookProvider: React.FC<
   React.PropsWithChildren<Partial<BookViewerState>>
 > = (props) => {
+  const isScrolling = React.useRef(false);
+
   const [state, dispatch] = useReducer(reducer, {
     ...defaultState,
     ...props,
@@ -124,7 +127,7 @@ export const BookProvider: React.FC<
     });
   }, [props.currIndex]);
 
-  const { run: changeIndex } = useThrottleFn(
+  const { run: changeIndex } = useDebounceFn(
     (args: Parameters<BookContextAddOns["changeIndex"]>[0]) => {
       let argsIndex = typeof args === "number" ? args : args.index;
       let scrollToItem = typeof args === "number" ? true : args.scrollToItem;
@@ -158,6 +161,7 @@ export const BookProvider: React.FC<
         ...state,
         dispatch,
         changeIndex,
+        isScrolling,
       }}
     >
       {props.children}

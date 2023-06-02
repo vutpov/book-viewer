@@ -27,6 +27,10 @@ const FlipScroll: React.FC<FlipBookChildrenProps> = () => {
   );
 
   useEffect(() => {
+    state.isScrolling.current = false;
+  }, []);
+
+  useEffect(() => {
     const toggleVisible = (visible: boolean) => {
       const btnNext = document.getElementById(btnNextId);
       const btnPrev = document.getElementById(btnPrevId);
@@ -69,6 +73,9 @@ const FlipScroll: React.FC<FlipBookChildrenProps> = () => {
                     }}
                   />
                 );
+              }}
+              onScroll={() => {
+                state.isScrolling.current = true;
               }}
             />
           );

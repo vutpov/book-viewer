@@ -23,7 +23,7 @@ const PageControl: React.FC<PageControlProps> = (props) => {
   const [pageNumberValue, setPageNumberValue] = useState(state.currIndex || 0);
 
   let shouldUpdateContextPageRef = useRef(state.scrollToItem);
-
+  let scrollChangeRef = useRef(false);
   useDebounceEffect(
     () => {
       if (shouldUpdateContextPageRef.current) {
@@ -44,7 +44,9 @@ const PageControl: React.FC<PageControlProps> = (props) => {
   }, [state.scrollToItem]);
 
   useEffect(() => {
-    setPageNumberValue(state.currIndex);
+    if (!scrollChangeRef.current) {
+      setPageNumberValue(state.currIndex);
+    }
   }, [state.currIndex]);
 
   let pageControl = (
@@ -56,7 +58,9 @@ const PageControl: React.FC<PageControlProps> = (props) => {
         max={src.length - 1}
         value={pageNumberValue}
         onChange={(value) => {
+          shouldUpdateContextPageRef.current = true;
           setPageNumberValue(Number(value));
+          state.isScrolling.current = false;
         }}
       />
 
@@ -71,7 +75,7 @@ const PageControl: React.FC<PageControlProps> = (props) => {
               indexToChange = state.currIndex;
               console.error(e);
             }
-            console.log(indexToChange, state.currIndex, `hello`);
+
             if (!isNaN(indexToChange)) {
               indexToChange = indexToChange - 1 - state.currIndex;
               changeIndex({
