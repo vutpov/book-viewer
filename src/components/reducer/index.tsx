@@ -75,7 +75,7 @@ export const reducer = (
 export const defaultState: BookViewerState = {
   currIndex: 0,
   step: 1,
-  viewType: ViewType.scroll,
+  viewType: ViewType.onePage,
   src: [],
   scrollToItem: false,
 };

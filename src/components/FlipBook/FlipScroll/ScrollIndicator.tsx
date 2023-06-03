@@ -9,7 +9,7 @@ const variants = {
   closed: { opacity: 0, x: 0 },
 };
 
-const ScrollIndicator = () => {
+const ScrollIndicator: React.FC<React.PropsWithChildren> = (props) => {
   const [visible, setVisible] = useState(true);
   const containerRef = useRef();
   useEffect(() => {
@@ -43,7 +43,9 @@ const ScrollIndicator = () => {
           animate={"show"}
           exit={"closed"}
           transition={{ duration: 0.5, yoyo: Infinity }}
-        />
+        >
+          {props.children}
+        </motion.div>
       )}
     </AnimatePresence>
   );

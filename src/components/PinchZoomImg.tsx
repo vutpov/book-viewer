@@ -25,8 +25,14 @@ const Img: React.FC<ImgProps> = (props) => {
   const zoomRef = useRef<QuickPinchZoom>();
   const { dispatch } = useContext(BookContext);
   let scaleRef = useRef(0);
-  const onUpdate = useCallback(({ x, y, scale }: UpdateAction) => {
+  const dragXY = useRef({});
+
+  const onUpdate = ({ x, y, scale }: UpdateAction) => {
     const { current: img } = imgRef as any;
+
+    if (dragXY.current?.scale !== scale) {
+      dragXY.current = { x, scale, y };
+    }
 
     if (img) {
       const value = make3dTransformValue({ x, y, scale });
@@ -35,7 +41,7 @@ const Img: React.FC<ImgProps> = (props) => {
     }
 
     scaleRef.current = roundNumber(scale);
-  }, []);
+  };
 
   const { src, isLoading, error } = useImage({
     srcList: [props.imageSrc],
@@ -92,16 +98,7 @@ const Img: React.FC<ImgProps> = (props) => {
         maxZoom={maxScale}
         doubleTapZoomOutOnMaxScale={true}
         zoomOutFactor={1}
-        onZoomEnd={() => {
-          let zoomSrc = scaleRef.current == 1 ? null : props.imageSrc;
-
-          dispatch({
-            type: ActionType.changeZoom,
-            payload: zoomSrc,
-          });
-        }}
-
-        // onZoomUpdate={() => {
+        // onZoomEnd={() => {
         //   let zoomSrc = scaleRef.current == 1 ? null : props.imageSrc;
 
         //   dispatch({
@@ -109,6 +106,19 @@ const Img: React.FC<ImgProps> = (props) => {
         //     payload: zoomSrc,
         //   });
         // }}
+
+        // inertia={false}
+        lockDragAxis={true}
+        // shouldCancelHandledTouchEndEvents={true}
+
+        onZoomUpdate={() => {
+          let zoomSrc = scaleRef.current == 1 ? null : props.imageSrc;
+
+          dispatch({
+            type: ActionType.changeZoom,
+            payload: zoomSrc,
+          });
+        }}
       >
         {renderImg()}
       </QuickPinchZoom>

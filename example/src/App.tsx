@@ -42,18 +42,15 @@ const App = () => {
         open
       </button>
 
-      <BookProvider
-        src={imgs}
-        // currIndex={5}
-      >
+      <BookProvider src={imgs} currIndex={5}>
         <div
-        // style={{
-        //   position: `absolute`,
-        //   top: 0,
-        //   left: 0,
-        //   opacity: show ? 1 : 0,
-        //   zIndex: show ? 1 : -1,
-        // }}
+          style={{
+            position: `absolute`,
+            top: 0,
+            left: 0,
+            opacity: show ? 1 : 0,
+            zIndex: show ? 1 : -1,
+          }}
         >
           <FlipBook
             containerRef={ref}

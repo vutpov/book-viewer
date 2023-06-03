@@ -53,35 +53,37 @@ const FlipScroll: React.FC<FlipBookChildrenProps> = () => {
         {({ height, width }: any) => {
           const gap = 20;
           const itemHeight = height - gap;
-
+          console.log("height", height);
           return (
-            <Virtuoso
-              id="flip-scroll-container"
-              style={{ height, width }}
-              data={state.src}
-              fixedItemHeight={itemHeight}
-              ref={virtualListRef}
-              overscan={5 * itemHeight}
-              itemContent={(index, src) => {
-                return (
-                  <Row
-                    src={src}
-                    index={index}
-                    style={{
-                      height: itemHeight,
-                      marginBottom: gap,
-                    }}
-                  />
-                );
-              }}
-              onScroll={() => {
-                state.isScrolling.current = true;
-              }}
-            />
+            <>
+              <Virtuoso
+                id="flip-scroll-container"
+                style={{ height, width }}
+                data={state.src}
+                fixedItemHeight={itemHeight}
+                ref={virtualListRef}
+                overscan={5 * itemHeight}
+                itemContent={(index, src) => {
+                  return (
+                    <Row
+                      src={src}
+                      index={index}
+                      style={{
+                        height: itemHeight,
+                        marginBottom: gap,
+                      }}
+                    />
+                  );
+                }}
+                onScroll={() => {
+                  state.isScrolling.current = true;
+                }}
+              />
+              <ScrollIndicator></ScrollIndicator>
+            </>
           );
         }}
       </AutoSizer>
-      <ScrollIndicator />
     </>
   );
 };
