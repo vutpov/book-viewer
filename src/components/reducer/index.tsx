@@ -1,5 +1,6 @@
 import { useDebounceFn } from "ahooks";
-import React, { useEffect, useReducer } from "react";
+import React, { startTransition, useEffect, useReducer } from "react";
+import { ImgProps } from "../PinchZoomImg";
 
 const viewTypeObj = {
   onePage: 1,
@@ -26,6 +27,7 @@ export interface BookViewerState {
   zoomSrc?: string;
   src: string[];
   scrollToItem: boolean;
+  imgProps?: ImgProps;
 }
 
 export const reducer = (
@@ -105,11 +107,18 @@ export const BookProvider: React.FC<
 > = (props) => {
   const isScrolling = React.useRef(false);
 
-  const [state, dispatch] = useReducer(reducer, {
+  const [state, _dispatch] = useReducer(reducer, {
     ...defaultState,
     ...props,
     currIndex: props.currIndex || 0,
   });
+
+  const dispatch: BookContextAddOns["dispatch"] = (action) => {
+    startTransition(() => {
+      _dispatch(action);
+    });
+    // _dispatch(action);
+  };
 
   useEffect(() => {
     dispatch({
@@ -151,7 +160,7 @@ export const BookProvider: React.FC<
       });
     },
     {
-      wait: 500,
+      wait: 0,
     }
   );
 
@@ -162,6 +171,7 @@ export const BookProvider: React.FC<
         dispatch,
         changeIndex,
         isScrolling,
+        imgProps: props.imgProps,
       }}
     >
       {props.children}

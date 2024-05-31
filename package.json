@@ -1,6 +1,6 @@
 {
   "name": "book-viewer",
-  "version": "0.1.4-a",
+  "version": "0.1.5",
   "types": "./dist/index.d.ts",
   "source": "./src/index.tsx",
   "exports": {

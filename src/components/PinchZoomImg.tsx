@@ -10,9 +10,10 @@ import { roundNumber } from "../utils";
 import { useImage } from "react-image";
 import CoolImg from "react-cool-img";
 
-interface ImgProps {
+export interface ImgProps {
   imageSrc?: string;
   showPlaceholder?: boolean;
+  ignoreLoading?: boolean;
   [index: string]: any;
 }
 
@@ -23,7 +24,12 @@ const Img: React.FC<ImgProps> = (props) => {
 
   const imgRef = useRef<HTMLImageElement>();
   const zoomRef = useRef<QuickPinchZoom>();
-  const { dispatch } = useContext(BookContext);
+  const {
+    dispatch,
+    imgProps: ctxImgProps = {
+      ignoreLoading: false,
+    },
+  } = useContext(BookContext);
   let scaleRef = useRef(0);
   const dragXY = useRef({});
 
@@ -61,33 +67,40 @@ const Img: React.FC<ImgProps> = (props) => {
 
     let placeholderStyle = {};
 
-    if (isLoading) {
-      return (
-        <img
-          {...imgProps}
-          src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
-          style={{
-            ...style,
-            ...placeholderStyle,
-          }}
-        />
-      );
+    let resultProps = {
+      ...imgProps,
+      style: {
+        ...style,
+        ...placeholderStyle,
+      },
+      src: Boolean(ctxImgProps.ignoreLoading) ? props.imageSrc : src,
+    };
+
+    if (isLoading && Boolean(ctxImgProps.ignoreLoading) === false) {
+      resultProps = {
+        ...resultProps,
+        src: "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif",
+      };
     }
 
     if (error) {
-      return (
-        <img
-          {...imgProps}
-          src={`https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg`}
-          style={{
-            ...style,
-            ...placeholderStyle,
-          }}
-        />
-      );
+      resultProps = {
+        ...resultProps,
+        src: `https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg`,
+      };
     }
 
-    return result;
+    // console.log(
+    //   {
+    //     error,
+    //     isLoading,
+    //     ctxImgProps,
+    //     resultProps,
+    //   },
+    //   `hello`
+    // );
+
+    return <img {...resultProps} />;
   };
 
   return (

@@ -20,8 +20,10 @@ const App = () => {
       const imgUrls = Array(30)
         .fill(0)
         .map((_item: any, index) => {
-          // return getLoremLink(index);
-          return getBookLink(index + 1);
+          let result = getLoremLink(index);
+          // let result = getBookLink(index + 1);
+          // console.log(result, `hello`);
+          return result;
         });
 
       setImgs(imgUrls);
@@ -42,7 +44,11 @@ const App = () => {
         open
       </button>
 
-      <BookProvider src={imgs} currIndex={5}>
+      <BookProvider
+        src={imgs}
+        currIndex={5}
+        imgProps={{ ignoreLoading: false }}
+      >
         <div
           style={{
             position: `absolute`,
