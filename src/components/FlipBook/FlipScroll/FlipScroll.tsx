@@ -8,6 +8,7 @@ import { VirtuosoHandle } from "react-virtuoso";
 import { btnNextId, btnPrevId } from "../../PageNavigator/PageNavigator";
 import Row from "./Row";
 import ScrollIndicator from "./ScrollIndicator";
+import { checkDocumentExists } from "../../../utils";
 
 const FlipScroll: React.FC<FlipBookChildrenProps> = () => {
   const state = useContext(BookContext);
@@ -31,6 +32,10 @@ const FlipScroll: React.FC<FlipBookChildrenProps> = () => {
   }, []);
 
   useEffect(() => {
+    if (!checkDocumentExists()) {
+      return;
+    }
+
     const toggleVisible = (visible: boolean) => {
       const btnNext = document.getElementById(btnNextId);
       const btnPrev = document.getElementById(btnPrevId);

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import styles from "./PageNavigator.module.less";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa";
+import { checkDocumentExists } from "../../utils";
 
 interface PageNavigatorProps {
   onNextClick: () => void;
@@ -16,6 +17,9 @@ const PageNavigator: React.FC<PageNavigatorProps> = (props) => {
   const { onNextClick, onPrevClick, className } = props;
 
   useEffect(() => {
+    if (!checkDocumentExists()) {
+      return;
+    }
     const dom = document.getElementById(btnNextId);
     dom!!.focus();
   }, []);

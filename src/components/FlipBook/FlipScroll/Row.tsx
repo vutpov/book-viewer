@@ -3,6 +3,7 @@ import Img from "../../PinchZoomImg";
 import { ActionType, BookContext } from "../../reducer";
 
 import { useInViewport, useDebounceEffect } from "ahooks";
+import { checkDocumentExists } from "../../../utils";
 
 const Row: React.FC<any> = (props) => {
   const { index, style, src, ...rest } = props;
@@ -14,7 +15,9 @@ const Row: React.FC<any> = (props) => {
     return `flip-scroll-container`;
   }, []);
   const [inViewport] = useInViewport(ref, {
-    root: document.getElementById(rootElementId),
+    root: checkDocumentExists()
+      ? document.getElementById(rootElementId)
+      : undefined,
     threshold: [0.75, 1],
   });
   const { dispatch, isScrolling } = useContext(BookContext);

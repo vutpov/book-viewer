@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useContext } from "react";
 import styles from "./styles.module.less";
 import lodash from "lodash";
-import { getUUId, vitualizeArray } from "../../utils";
+import { checkDocumentExists, getUUId, vitualizeArray } from "../../utils";
 import Img from "../PinchZoomImg";
 import usePrevious from "../../hooks/usePrevious";
 import { FlipBookChildrenProps } from "./FlipBookChildren";
@@ -70,6 +70,10 @@ const FlipTwoPage: React.FC<FlipBookChildrenProps> = (props) => {
   const oldIndex = usePrevious(state.currIndex);
 
   useEffect(() => {
+    if (!checkDocumentExists()) {
+      return;
+    }
+
     if (oldIndex !== state.currIndex && Number.isInteger(oldIndex)) {
       let prevPage = containerRef?.current?.querySelector(
         `#p-${oldIndex}-${compId}`
